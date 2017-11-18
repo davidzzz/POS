@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class ConnectionConfig {
-    private String ip = "192.168.56.1";
+    private String ip = "10.0.3.2:61389";
     private String classs = "net.sourceforge.jtds.jdbc.Driver";
     private String db = "FBMain";
     private String un = "sa";
