@@ -16,8 +16,10 @@ import android.widget.Toast;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.ConnectionConfig;
+import com.mobile.pos.sql.Query;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -32,14 +34,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Spec> listSpec = new ArrayList<>();
     ArrayAdapter<Kategori> adapter1;
     ArrayAdapter<Spec> adapter2;
-    Connection con;
+    Query query;
+    Spec spec;
+    String userCode, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ConnectionConfig connectionConfig = new ConnectionConfig();
-        con = connectionConfig.CONN("FBMaster");
+        query = new Query();
         confirm = (Button) findViewById(R.id.confirm);
         cancel = (Button) findViewById(R.id.cancel);
         order = (Button) findViewById(R.id.order);
@@ -48,11 +51,24 @@ public class MainActivity extends AppCompatActivity {
         search = (EditText) findViewById(R.id.search);
         listView = (ListView) findViewById(R.id.listView);
         gridView = (GridView) findViewById(R.id.gridView);
+        userCode = getIntent().getStringExtra("userCode");
+        username = getIntent().getStringExtra("username");
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, OrderActivity.class);
-                startActivity(i);
+                spec = (Spec) nomor.getSelectedItem();
+                if (spec.isKtv()) {
+                    if (spec.getStatus().equals("V")) {
+                        Toast.makeText(MainActivity.this, "KTV wajib dibuka melalui POS", Toast.LENGTH_SHORT).show();
+                    } else {
+                        orderLock();
+                    }
+                } else {
+                    if (spec.getStatus().equals("V")) {
+                        query.updateSpec(spec.getKode());
+                    }
+                    orderLock();
+                }
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -84,50 +100,44 @@ public class MainActivity extends AppCompatActivity {
         order.setEnabled(!state);
     }
 
-    public void getKategoriMeja() {
-        try {
-            String query = "Select Spec_CatDesc,Spec_CatCode from SpecCat Order By Spec_CatDesc";
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                Kategori k = new Kategori();
-                k.setNama(rs.getString("Spec_CatDesc"));
-                k.setKode(rs.getString("Spec_CatCode"));
-                listKategori.add(k);
+    public void orderLock() {
+        int status = query.findOrderLock(spec.getKode());
+        if (status == 1) {
+            int a = query.insertOpenSpec(spec.getKode(), username);
+            int b = query.insertOrderLock(spec.getKode());
+            int c = query.insertLog(spec.getKode(), "DEP", userCode, username, "BUKA MEJA " + spec.getKode());
+            if (a > 0 && b > 0 && c > 0) {
+                activeState(false);
+            } else {
+                Toast.makeText(this, "Terjadi kesalahan saat melakukan konfirmasi", Toast.LENGTH_SHORT).show();
             }
-            adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listKategori);
-            kategori.setAdapter(adapter1);
-            kategori.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    Kategori k = (Kategori) adapterView.getItemAtPosition(i);
-                    getNomorMeja(k.getKode());
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-        } catch (Exception e) {
+        } else if (status == 0) {
+            Toast.makeText(this, "Unit sedang diorder oleh user lain", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void getNomorMeja(String kode) {
-        try {
-            listSpec.clear();
-            String query = "Select Spec_Code, ISKtv From Spec Where Spec_CatCode = '" + kode + "'";
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while (rs.next()) {
-                Spec s = new Spec();
-                s.setKtv(rs.getBoolean("ISKtv"));
-                s.setKode(rs.getString("Spec_Code"));
-                listSpec.add(s);
+    public void getKategoriMeja() {
+        listKategori = query.findSpecCat();
+        adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listKategori);
+        kategori.setAdapter(adapter1);
+        kategori.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Kategori k = (Kategori) adapterView.getItemAtPosition(i);
+                getNomorMeja(k.getKode());
             }
-            adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listSpec);
-            nomor.setAdapter(adapter2);
-        } catch (Exception e) {
-        }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    public void getNomorMeja(String kode) {
+        listSpec.clear();
+        listSpec = query.findSpec(kode);
+        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listSpec);
+        nomor.setAdapter(adapter2);
     }
 }

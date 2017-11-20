@@ -1,7 +1,7 @@
 package com.mobile.pos.model;
 
 public class Spec {
-    private String kode;
+    private String kode, status;
     private boolean ktv;
 
     public void setKode(String kode) {
@@ -10,6 +10,14 @@ public class Spec {
 
     public String getKode() {
         return kode;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setKtv(boolean ktv) {
