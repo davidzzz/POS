@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mUser;
         private final String mPassword;
-        private String z;
+        private String z, username;
 
         UserLoginTask(String user, String password) {
             mUser = user;
@@ -116,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                         z = "Password Salah";
                         return false;
                     }
+                    username = rs.getString("User_Name");
                 }
                 con.close();
             } catch (Exception ex) {
@@ -131,6 +132,8 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             if (success) {
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                i.putExtra("userCode", mUser);
+                i.putExtra("username", username);
                 startActivity(i);
                 finish();
             } else {
