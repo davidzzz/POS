@@ -1,18 +1,14 @@
 package com.mobile.pos.sql;
 
-import android.util.*;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.mobile.pos.model.Kategori;
+import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Spec;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -25,6 +21,21 @@ public class Query {
     public Query(){
         connConfig = new ConnectionConfig();
         conn = connConfig.CONN("FBMaster");
+    }
+
+    public void closeConnection() {
+        try {
+            conn.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public boolean isCloseConnection() {
+        try {
+            return conn.isClosed();
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     public ArrayList<Kategori> findSpecCat() {
@@ -57,6 +68,42 @@ public class Query {
                 s.setKode(rs.getString("Spec_Code"));
                 s.setStatus(rs.getString("Status"));
                 list.add(s);
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
+    public ArrayList<Kategori> findKategori() {
+        ArrayList<Kategori> list = new ArrayList<>();
+        try {
+            query = "Select Category_Code, Stock_Category From Allocation Group By Category_Code, Stock_Category Order By Stock_Category";
+            stmt = conn.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Kategori k = new Kategori();
+                k.setNama(rs.getString("Stock_Category"));
+                k.setKode(rs.getString("Category_Code"));
+                list.add(k);
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
+    public ArrayList<Menu> findDaftarMenu(String kode) {
+        ArrayList<Menu> list = new ArrayList<>();
+        try {
+            query = "Select Stock_Code,Stock_Name,Stock_SellPrice1 From Allocation Where Category_Code = ? Order By Stock_Name";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Menu m = new Menu();
+                m.setNama(rs.getString("Stock_Name"));
+                m.setKode(rs.getString("Stock_Code"));
+                m.setHarga(rs.getDouble("Stock_SellPrice1"));
+                list.add(m);
             }
         } catch (Exception e) {
         }
@@ -134,7 +181,6 @@ public class Query {
             String year = String.valueOf(c.get(Calendar.YEAR));
             String hour = c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "" + c.get(Calendar.HOUR_OF_DAY);
             String minute = c.get(Calendar.MINUTE) < 10 ? "0" : "" + c.get(Calendar.MINUTE);
-            //(POS,'APPS TAMBAH MENU ' + <kode menu> + 'QTY ' + <qty order>,'')
 
             query = "INSERT INTO Logging2(Spec_Code,Dep_Code,Date,Time,User_Code,User_Name,Period,Description,Sell_Code)" +
                     "VALUES (?,?,?,?,?,?,?,?,?)";
