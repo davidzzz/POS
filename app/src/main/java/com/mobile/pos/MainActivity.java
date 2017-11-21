@@ -1,6 +1,8 @@
 package com.mobile.pos;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,15 +15,11 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.mobile.pos.adapter.KategoriAdapter;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Spec;
-import com.mobile.pos.sql.ConnectionConfig;
 import com.mobile.pos.sql.Query;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,13 +28,14 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     GridView gridView;
     EditText search;
+    ArrayList<Kategori> listSpecKat = new ArrayList<>();
     ArrayList<Kategori> listKategori = new ArrayList<>();
     ArrayList<Spec> listSpec = new ArrayList<>();
     ArrayAdapter<Kategori> adapter1;
     ArrayAdapter<Spec> adapter2;
     Query query;
     Spec spec;
-    String userCode, username;
+    String userCode, username, kategoriMeja;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,18 +73,36 @@ public class MainActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, OrderActivity.class);
-                startActivity(i);
+                query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + spec.getKode() + "QTY " + spec.getKode());
+                query.deleteOrderLock(spec.getKode());
+                activeState(true);
             }
         });
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, OrderActivity.class);
-                startActivity(i);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("KONFIRMASI PESANAN");
+                builder.setMessage("Apakah pesanan sudah benar?");
+                builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        query.deleteOrderLock(spec.getKode());
+                        activeState(true);
+                    }
+                });
+                builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
         getKategoriMeja();
+        getKategori();
         activeState(true);
     }
 
@@ -117,14 +134,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getKategoriMeja() {
-        listKategori = query.findSpecCat();
-        adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listKategori);
+        listSpecKat = query.findSpecCat();
+        adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listSpecKat);
         kategori.setAdapter(adapter1);
         kategori.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Kategori k = (Kategori) adapterView.getItemAtPosition(i);
                 getNomorMeja(k.getKode());
+                kategoriMeja = k.getNama();
             }
 
             @Override
@@ -139,5 +157,30 @@ public class MainActivity extends AppCompatActivity {
         listSpec = query.findSpec(kode);
         adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listSpec);
         nomor.setAdapter(adapter2);
+    }
+
+    public void getKategori() {
+        listKategori = query.findKategori();
+        KategoriAdapter adapter = new KategoriAdapter(this, listKategori);
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Kategori k = (Kategori)adapterView.getItemAtPosition(position);
+                Intent i = new Intent(MainActivity.this, OrderActivity.class);
+                i.putExtra("kategoriMeja", kategoriMeja);
+                i.putExtra("kode", k.getKode());
+                query.closeConnection();
+                startActivity(i);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (query.isCloseConnection()) {
+            query = new Query();
+        }
     }
 }
