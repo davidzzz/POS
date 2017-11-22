@@ -18,22 +18,28 @@ import android.widget.Toast;
 
 import com.mobile.pos.adapter.KategoriAdapter;
 import com.mobile.pos.adapter.MenuAdapter;
+import com.mobile.pos.adapter.OrderAdapter;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Menu;
+import com.mobile.pos.model.Order;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
+import com.mobile.pos.view.ExpandableHeightListView;
+import com.mobile.pos.view.OnSwipeTouchListener;
 
 import java.util.ArrayList;
 
 public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
     TextView kategori, nomor;
-    ListView listView, listMenu;
+    ExpandableHeightListView listView, listMenu;
     EditText search;
     ArrayList<Menu> list = new ArrayList<>();
+    ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
     Spec spec;
-    String userCode, username, kode, kategoriMeja;
+    String username, kode, kodeMeja, kategoriMeja, userCode;
+    OrderAdapter orderAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +52,15 @@ public class OrderActivity extends AppCompatActivity {
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
         search = (EditText) findViewById(R.id.search);
-        listView = (ListView) findViewById(R.id.listView);
-        listMenu = (ListView) findViewById(R.id.listMenu);
+        listView = (ExpandableHeightListView) findViewById(R.id.listView);
+        listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         kategoriMeja = getIntent().getStringExtra("kategoriMeja");
+        kodeMeja = getIntent().getStringExtra("kodeMeja");
         kode = getIntent().getStringExtra("kode");
+        userCode = getIntent().getStringExtra("userCode");
+        username = getIntent().getStringExtra("username");
         kategori.setText(kategoriMeja);
-        nomor.setText(kode);
+        nomor.setText(kodeMeja);
         kembali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,12 +98,43 @@ public class OrderActivity extends AppCompatActivity {
             }
         });
         daftarMenu();
+        orderAdapter = new OrderAdapter(this, userCode, listOrder);
+        listView.setAdapter(orderAdapter);
+        listView.setExpanded(true);
+        listView.setEnabled(false);
+        /*listView.setOnTouchListener(new OnSwipeTouchListener(this) {
+            public void onSwipeRight() {
+                Toast.makeText(MyActivity.this, "right", Toast.LENGTH_SHORT).show();
+            }
+
+            public void onSwipeLeft() {
+                Toast.makeText(MyActivity.this, "left", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+    }
+
+    public ArrayList<Order> getListOrder(){
+        return listOrder;
+    }
+
+    public OrderAdapter getOrderAdapter(){
+        return orderAdapter;
+    }
+
+    public Order getOrder(String kode){
+        for (int i = 0; i < listOrder.size(); i++){
+            if (listOrder.get(i).getKode().equals(kode)){
+                return listOrder.get(i);
+            }
+        }
+        return null;
     }
 
     public void daftarMenu(){
         list = query.findDaftarMenu(kode);
         MenuAdapter adapter = new MenuAdapter(this, list);
         listMenu.setAdapter(adapter);
+        listMenu.setExpanded(true);
         listMenu.setEnabled(false);
     }
 }
