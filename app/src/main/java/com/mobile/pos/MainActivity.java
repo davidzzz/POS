@@ -10,8 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,14 +17,16 @@ import com.mobile.pos.adapter.KategoriAdapter;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
+import com.mobile.pos.view.ExpandableHeightGridView;
+import com.mobile.pos.view.ExpandableHeightListView;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     Button confirm, cancel, order;
     Spinner kategori, nomor;
-    ListView listView;
-    GridView gridView;
+    ExpandableHeightListView listView;
+    ExpandableHeightGridView gridView;
     EditText search;
     ArrayList<Kategori> listSpecKat = new ArrayList<>();
     ArrayList<Kategori> listKategori = new ArrayList<>();
@@ -48,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         kategori = (Spinner) findViewById(R.id.kategori);
         nomor = (Spinner) findViewById(R.id.nomor);
         search = (EditText) findViewById(R.id.search);
-        listView = (ListView) findViewById(R.id.listView);
-        gridView = (GridView) findViewById(R.id.gridView);
+        listView = (ExpandableHeightListView) findViewById(R.id.listView);
+        gridView = (ExpandableHeightGridView) findViewById(R.id.gridView);
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
         confirm.setOnClickListener(new View.OnClickListener() {
@@ -163,13 +163,17 @@ public class MainActivity extends AppCompatActivity {
         listKategori = query.findKategori();
         KategoriAdapter adapter = new KategoriAdapter(this, listKategori);
         gridView.setAdapter(adapter);
+        gridView.setExpanded(true);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Kategori k = (Kategori)adapterView.getItemAtPosition(position);
                 Intent i = new Intent(MainActivity.this, OrderActivity.class);
                 i.putExtra("kategoriMeja", kategoriMeja);
+                i.putExtra("kodeMeja", spec.getKode());
                 i.putExtra("kode", k.getKode());
+                i.putExtra("userCode", userCode);
+                i.putExtra("username", username);
                 query.closeConnection();
                 startActivity(i);
             }
