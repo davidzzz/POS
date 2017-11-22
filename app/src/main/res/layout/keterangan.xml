@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:id="@+id/keterangan"
+        android:padding="5dp"
+        android:layout_marginBottom="5dp"
+        android:hint="Masukkan catatan order"
+        android:background="@drawable/border_rectangle"
+        android:lines="3"
+        android:maxLines="5"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ok"
+        android:background="@drawable/add_selector"
+        android:text="OK"/>
+
+</LinearLayout>

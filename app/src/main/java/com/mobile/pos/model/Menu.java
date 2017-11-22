@@ -1,7 +1,7 @@
 package com.mobile.pos.model;
 
 public class Menu {
-    private String nama, kode;
+    private String nama, kode, keterangan;
     private double harga;
 
     public void setNama(String nama) {
@@ -26,5 +26,13 @@ public class Menu {
 
     public double getHarga() {
         return harga;
+    }
+
+    public void setKeterangan(String keterangan) {
+        this.keterangan = keterangan;
+    }
+
+    public String getKeterangan() {
+        return keterangan;
     }
 }

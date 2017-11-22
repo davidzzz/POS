@@ -8,12 +8,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:src="#0099FF"
         android:id="@+id/image"/>
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:orientation="vertical"
         android:layout_margin="5dp">
         <LinearLayout
@@ -29,7 +30,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:id="@+id/btn"
-                android:text="e" />
+                android:text="e"
+                android:focusable="false"/>
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/order"
-            android:text="Order"/>
+            android:text="Order"
+            android:focusable="false"/>
     </LinearLayout>
 
     <LinearLayout
@@ -51,7 +54,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/min"
-            android:text="-"/>
+            android:text="-"
+            android:focusable="false"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +65,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/pos"
-            android:text="+"/>
+            android:text="+"
+            android:focusable="false"/>
     </LinearLayout>
 
 </LinearLayout>
