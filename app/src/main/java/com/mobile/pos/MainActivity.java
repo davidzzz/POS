@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + spec.getKode() + "QTY " + spec.getKode());
                 query.deleteOrderLock(spec.getKode());
                 activeState(true);
             }
@@ -87,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + spec.getKode() + "QTY " + spec.getKode());
                         query.deleteOrderLock(spec.getKode());
                         activeState(true);
                     }

@@ -103,6 +103,9 @@ public class MenuAdapter extends BaseAdapter {
                     o.setNama(m.getNama());
                     o.setKeterangan(m.getKeterangan());
                     o.setHarga(m.getHarga());
+                    o.setUom(m.getUom());
+                    o.setWh(m.getWh());
+                    o.setPrintCode(m.getPrintCode());
                     o.setQty(Integer.parseInt(teksQty.getText().toString()));
                     ((OrderActivity) context).getListOrder().add(o);
                 }

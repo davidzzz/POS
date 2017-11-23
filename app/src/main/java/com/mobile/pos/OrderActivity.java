@@ -37,7 +37,6 @@ public class OrderActivity extends AppCompatActivity {
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
-    Spec spec;
     String username, kode, kodeMeja, kategoriMeja, userCode;
     OrderAdapter orderAdapter;
 
@@ -71,8 +70,7 @@ public class OrderActivity extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + spec.getKode() + "QTY " + spec.getKode());
-                query.deleteOrderLock(spec.getKode());
+                query.deleteOrderLock(kodeMeja);
             }
         });
         order.setOnClickListener(new View.OnClickListener() {
@@ -84,7 +82,14 @@ public class OrderActivity extends AppCompatActivity {
                 builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        query.deleteOrderLock(spec.getKode());
+                        query.insertSellMaster(kodeMeja, userCode);
+                        for (int j = 0; j < listOrder.size(); j++) {
+                            Order o = listOrder.get(j);
+                            query.insertSellDetail(kodeMeja, userCode, o);
+                            query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
+                        }
+                        query.deleteOrderLock(kodeMeja);
+                        Toast.makeText(OrderActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
@@ -102,15 +107,6 @@ public class OrderActivity extends AppCompatActivity {
         listView.setAdapter(orderAdapter);
         listView.setExpanded(true);
         listView.setEnabled(false);
-        /*listView.setOnTouchListener(new OnSwipeTouchListener(this) {
-            public void onSwipeRight() {
-                Toast.makeText(MyActivity.this, "right", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onSwipeLeft() {
-                Toast.makeText(MyActivity.this, "left", Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     public ArrayList<Order> getListOrder(){
