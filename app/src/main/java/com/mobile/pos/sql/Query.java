@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Menu;
+import com.mobile.pos.model.Order;
 import com.mobile.pos.model.Spec;
 
 import java.sql.Connection;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class Query {
     private ConnectionConfig connConfig;
@@ -94,7 +96,7 @@ public class Query {
     public ArrayList<Menu> findDaftarMenu(String kode) {
         ArrayList<Menu> list = new ArrayList<>();
         try {
-            query = "Select Stock_Code,Stock_Name,Stock_SellPrice1 From Allocation Where Category_Code = ? Order By Stock_Name";
+            query = "Select Stock_Code,Stock_Name,Stock_UOM,Stock_SellPrice1,WH_No,PrintCode From Allocation Where Category_Code = ? Order By Stock_Name";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, kode);
             ResultSet rs = stmt.executeQuery();
@@ -102,7 +104,10 @@ public class Query {
                 Menu m = new Menu();
                 m.setNama(rs.getString("Stock_Name"));
                 m.setKode(rs.getString("Stock_Code"));
-                m.setHarga(rs.getDouble("Stock_SellPrice1"));
+                m.setUom(rs.getString("Stock_UOM"));
+                m.setWh(rs.getString("WH_No"));
+                m.setPrintCode(rs.getString("PrintCode"));
+                m.setHarga(rs.getFloat("Stock_SellPrice1"));
                 list.add(m);
             }
         } catch (Exception e) {
@@ -208,6 +213,120 @@ public class Query {
             return stmt.executeUpdate();
         } catch (Exception e) {
             return 0;
+        }
+    }
+
+    private int findEmptyStatus(String kode) {
+        try {
+            query = "Select count(*) as jumlah From OpenSpec Where Spec_Code = ? AND Status = ''";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() ? rs.getInt("jumlah") + 1 : 1;
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    private int findNomorMeja(String kode) {
+        try {
+            query = "Select count(*) as jumlah From Sell_Detail Where Spec_Code = ? AND Status = ''";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() ? rs.getInt("jumlah") + 1 : 1;
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    private int findQueryNumber(String tanggal) {
+        try {
+            query = "Select count(*) as jumlah From Sell_Master Where Sell_Date = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, tanggal);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() ? rs.getInt("jumlah") : 0;
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
+    private String getFormatString(int n) {
+        if (n < 10) return "00" + String.valueOf(n);
+        else if (n > 9 && n < 100) return "0" + String.valueOf(n);
+        return String.valueOf(n);
+    }
+
+    public void insertSellMaster(String kode, String kodeUser){
+        try {
+            Calendar c = Calendar.getInstance();
+            String day = c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "" + c.get(Calendar.DAY_OF_MONTH);
+            String month = (c.get(Calendar.MONTH) + 1) < 10 ? "0" : "" + (c.get(Calendar.MONTH) + 1);
+            String year = String.valueOf(c.get(Calendar.YEAR));
+            String teks = kode + "-" + getFormatString(findEmptyStatus(kode));
+
+            query = "INSERT INTO Sell_Master(Spec_Code,SpecO_Code,Dep_Code,Guest_Name,Sell_Date,Status,User_Code,Period,Guest_No)" +
+                    "VALUES (?,?,?,?,?,?,?,?,?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            stmt.setString(2, teks);
+            stmt.setString(3, "POS");
+            stmt.setString(4, "CASH");
+            stmt.setString(5, day + "-" + month + "-" + year);
+            stmt.setString(6, "");
+            stmt.setString(7, kodeUser);
+            stmt.setString(8, year + month);
+            stmt.setString(9, "");
+            stmt.executeUpdate();
+        } catch (Exception e) {
+        }
+    }
+
+    public void insertSellDetail(String kode, String kodeUser, Order o){
+        try {
+            Calendar c = Calendar.getInstance();
+            String day = c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "" + c.get(Calendar.DAY_OF_MONTH);
+            String month = (c.get(Calendar.MONTH) + 1) < 10 ? "0" : "" + (c.get(Calendar.MONTH) + 1);
+            String year = String.valueOf(c.get(Calendar.YEAR));
+            String hour = c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "" + c.get(Calendar.HOUR_OF_DAY);
+            String minute = c.get(Calendar.MINUTE) < 10 ? "0" : "" + c.get(Calendar.MINUTE);
+            String teks = kode + "-" + getFormatString(findEmptyStatus(kode));
+            String nomorMeja = String.valueOf(findNomorMeja(kode));
+            int nomor = findQueryNumber(day + "-" + month + "-" + year);
+
+            query = "INSERT INTO Sell_Detail(Spec_Code,SpecO_Code,Dep_Code,Status,Stock_Code,Stock_Name,Stock_Brand,Stock_UOM," +
+                    "Sell_Qty,Sell_Price,WH_No,Sell_Disc,DescX,PrintCode,Sell_Tax,User_Code,Pax,Sell_Date,Sell_Time,BillS_Code," +
+                    "User_Del,Del_Time,HR_Code,Guest_No,Queue_No,Reason) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            stmt.setString(2, teks);
+            stmt.setString(3, "POS");
+            stmt.setString(4, "");
+            stmt.setString(5, o.getKode());
+            stmt.setString(6, o.getNama());
+            stmt.setString(7, nomorMeja);
+            stmt.setString(8, o.getUom());
+            stmt.setFloat(9, o.getQty());
+            stmt.setFloat(10, o.getHarga());
+            stmt.setString(11, o.getWh());
+            stmt.setFloat(12, 0);
+            stmt.setString(13, o.getKeterangan());
+            stmt.setString(14, o.getPrintCode());
+            stmt.setFloat(15, 0);
+            stmt.setString(16, kodeUser);
+            stmt.setString(17, "1");
+            stmt.setString(18, day + "-" + month + "-" + year);
+            stmt.setString(19, hour + ":" + minute);
+            stmt.setString(20, "");
+            stmt.setString(21, "");
+            stmt.setString(22, "");
+            stmt.setString(23, "");
+            stmt.setString(24, "");
+            stmt.setInt(25, nomor);
+            stmt.setString(26, "");
+            stmt.executeUpdate();
+        } catch (Exception e) {
         }
     }
 }
