@@ -26,10 +26,12 @@ public class MenuAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Menu> list;
+    private OrderAdapter orderAdapter;
 
-    public MenuAdapter(Context context, ArrayList<Menu> list) {
+    public MenuAdapter(Context context, ArrayList<Menu> list, OrderAdapter orderAdapter) {
         this.context = context;
         this.list = list;
+        this.orderAdapter = orderAdapter;
     }
 
     @Override
@@ -66,6 +68,7 @@ public class MenuAdapter extends BaseAdapter {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
         }
         final TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
+        teksQty.setText("0");
         Button btn = (Button) convertView.findViewById(R.id.btn);
         Button order = (Button) convertView.findViewById(R.id.order);
         Button min = (Button) convertView.findViewById(R.id.min);
@@ -93,8 +96,8 @@ public class MenuAdapter extends BaseAdapter {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (((OrderActivity)context).getOrder(m.getKode()) != null) {
-                    Order o = ((OrderActivity)context).getOrder(m.getKode());
+                if (orderAdapter.getOrder(m.getKode()) != null) {
+                    Order o = orderAdapter.getOrder(m.getKode());
                     o.setKeterangan(m.getKeterangan());
                     o.setQty(Integer.parseInt(teksQty.getText().toString()));
                 } else {
@@ -107,9 +110,9 @@ public class MenuAdapter extends BaseAdapter {
                     o.setWh(m.getWh());
                     o.setPrintCode(m.getPrintCode());
                     o.setQty(Integer.parseInt(teksQty.getText().toString()));
-                    ((OrderActivity) context).getListOrder().add(o);
+                    orderAdapter.getList().add(o);
                 }
-                ((OrderActivity)context).getOrderAdapter().notifyDataSetChanged();
+                orderAdapter.notifyDataSetChanged();
             }
         });
         min.setOnClickListener(new View.OnClickListener() {

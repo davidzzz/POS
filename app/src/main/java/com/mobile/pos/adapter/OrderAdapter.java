@@ -31,6 +31,17 @@ public class OrderAdapter extends BaseAdapter {
         this.userCode = userCode;
     }
 
+    public ArrayList<Order> getList() { return list; }
+
+    public Order getOrder(String kode){
+        for (int i = 0; i < list.size(); i++){
+            if (list.get(i).getKode().equals(kode)){
+                return list.get(i);
+            }
+        }
+        return null;
+    }
+
     @Override
     public int getCount() { return list.size(); }
 
