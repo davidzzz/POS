@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +30,8 @@ import com.mobile.pos.view.ExpandableHeightListView;
 import com.mobile.pos.view.OnSwipeTouchListener;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
@@ -39,6 +43,8 @@ public class OrderActivity extends AppCompatActivity {
     Query query;
     String username, kode, kodeMeja, kategoriMeja, userCode;
     OrderAdapter orderAdapter;
+    MenuAdapter adapter;
+    Timer timer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +64,42 @@ public class OrderActivity extends AppCompatActivity {
         kode = getIntent().getStringExtra("kode");
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
+        listOrder = getIntent().getParcelableArrayListExtra("listOrder");
         kategori.setText(kategoriMeja);
         nomor.setText(kodeMeja);
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(
+                        new TimerTask() {
+                            @Override
+                            public void run() {
+                                daftarMenu();
+                            }
+                        },
+                        500
+                );
+            }
+        });
         kembali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 query.closeConnection();
+                listOrder.clear();
+                orderAdapter.notifyDataSetChanged();
+                setResult(1, getIntent().putParcelableArrayListExtra("orderArray", listOrder));
                 finish();
             }
         });
@@ -89,6 +125,8 @@ public class OrderActivity extends AppCompatActivity {
                             query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
                         }
                         query.deleteOrderLock(kodeMeja);
+                        listOrder.clear();
+                        orderAdapter.notifyDataSetChanged();
                         Toast.makeText(OrderActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -102,35 +140,42 @@ public class OrderActivity extends AppCompatActivity {
                 alert.show();
             }
         });
-        daftarMenu();
         orderAdapter = new OrderAdapter(this, userCode, listOrder);
         listView.setAdapter(orderAdapter);
         listView.setExpanded(true);
         listView.setEnabled(false);
-    }
-
-    public ArrayList<Order> getListOrder(){
-        return listOrder;
-    }
-
-    public OrderAdapter getOrderAdapter(){
-        return orderAdapter;
-    }
-
-    public Order getOrder(String kode){
-        for (int i = 0; i < listOrder.size(); i++){
-            if (listOrder.get(i).getKode().equals(kode)){
-                return listOrder.get(i);
-            }
-        }
-        return null;
-    }
-
-    public void daftarMenu(){
-        list = query.findDaftarMenu(kode);
-        MenuAdapter adapter = new MenuAdapter(this, list);
+        adapter = new MenuAdapter(this, list, orderAdapter);
         listMenu.setAdapter(adapter);
         listMenu.setExpanded(true);
         listMenu.setEnabled(false);
+        daftarMenu();
+    }
+
+    public void daftarMenu(){
+        String teks = search.getText().toString();
+        list.clear();
+        ArrayList<Menu> listArray = query.findDaftarMenu("%" + teks + "%", kode);
+        for (int i = 0; i < listArray.size(); i++) {
+            list.add(listArray.get(i));
+        }
+        new ReceiverThread().run();
+    }
+
+    private class ReceiverThread extends Thread {
+        @Override
+        public void run() {
+            OrderActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
     }
 }

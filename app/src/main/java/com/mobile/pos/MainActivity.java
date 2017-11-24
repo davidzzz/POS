@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,28 +17,39 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mobile.pos.adapter.KategoriAdapter;
+import com.mobile.pos.adapter.MenuAdapter;
+import com.mobile.pos.adapter.OrderAdapter;
 import com.mobile.pos.model.Kategori;
+import com.mobile.pos.model.Menu;
+import com.mobile.pos.model.Order;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.view.ExpandableHeightGridView;
 import com.mobile.pos.view.ExpandableHeightListView;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     Button confirm, cancel, order;
     Spinner kategori, nomor;
-    ExpandableHeightListView listView;
+    ExpandableHeightListView listView, listMenu;
     ExpandableHeightGridView gridView;
     EditText search;
     ArrayList<Kategori> listSpecKat = new ArrayList<>();
     ArrayList<Kategori> listKategori = new ArrayList<>();
     ArrayList<Spec> listSpec = new ArrayList<>();
+    ArrayList<Menu> list = new ArrayList<>();
+    ArrayList<Order> listOrder = new ArrayList<>();
     ArrayAdapter<Kategori> adapter1;
     ArrayAdapter<Spec> adapter2;
+    OrderAdapter orderAdapter;
+    MenuAdapter adapter;
     Query query;
     Spec spec;
     String userCode, username, kategoriMeja;
+    Timer timer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +63,36 @@ public class MainActivity extends AppCompatActivity {
         nomor = (Spinner) findViewById(R.id.nomor);
         search = (EditText) findViewById(R.id.search);
         listView = (ExpandableHeightListView) findViewById(R.id.listView);
+        listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         gridView = (ExpandableHeightGridView) findViewById(R.id.gridView);
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                timer.cancel();
+                timer = new Timer();
+                timer.schedule(
+                        new TimerTask() {
+                            @Override
+                            public void run() {
+                                daftarMenu();
+                            }
+                        },
+                        500
+                );
+            }
+        });
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +115,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 query.deleteOrderLock(spec.getKode());
+                listOrder.clear();
+                orderAdapter.notifyDataSetChanged();
+                search.setText("");
+                list.clear();
+                adapter.notifyDataSetChanged();
                 activeState(true);
             }
         });
@@ -86,8 +132,19 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + spec.getKode() + "QTY " + spec.getKode());
+                        query.insertSellMaster(spec.getKode(), userCode);
+                        for (int j = 0; j < listOrder.size(); j++) {
+                            Order o = listOrder.get(j);
+                            query.insertSellDetail(spec.getKode(), userCode, o);
+                            query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
+                        }
                         query.deleteOrderLock(spec.getKode());
+                        listOrder.clear();
+                        orderAdapter.notifyDataSetChanged();
+                        search.setText("");
+                        list.clear();
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(MainActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                         activeState(true);
                     }
                 });
@@ -104,6 +161,14 @@ public class MainActivity extends AppCompatActivity {
         getKategoriMeja();
         getKategori();
         activeState(true);
+        orderAdapter = new OrderAdapter(this, userCode, listOrder);
+        listView.setAdapter(orderAdapter);
+        listView.setExpanded(true);
+        listView.setEnabled(false);
+        adapter = new MenuAdapter(this, list, orderAdapter);
+        listMenu.setAdapter(adapter);
+        listMenu.setExpanded(true);
+        listMenu.setEnabled(false);
     }
 
     public void activeState(boolean state) {
@@ -115,6 +180,18 @@ public class MainActivity extends AppCompatActivity {
         gridView.setEnabled(!state);
         cancel.setEnabled(!state);
         order.setEnabled(!state);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            ArrayList<Order> listArray = data.getParcelableArrayListExtra("orderArray");
+            listOrder.clear();
+            for (int i = 0; i < listArray.size(); i++) {
+                listOrder.add(listArray.get(i));
+            }
+            orderAdapter.notifyDataSetChanged();
+        }
     }
 
     public void orderLock() {
@@ -174,10 +251,33 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("kode", k.getKode());
                 i.putExtra("userCode", userCode);
                 i.putExtra("username", username);
+                i.putExtra("listOrder", listOrder);
                 query.closeConnection();
-                startActivity(i);
+                startActivityForResult(i, 1);
             }
         });
+    }
+
+    public void daftarMenu(){
+        String teks = search.getText().toString();
+        list.clear();
+        ArrayList<Menu> listArray = query.findDaftarMenu(teks.equals("") ? "" : "%" + teks + "%", "");
+        for (int i = 0; i < listArray.size(); i++) {
+            list.add(listArray.get(i));
+        }
+        new ReceiverThread().run();
+    }
+
+    private class ReceiverThread extends Thread {
+        @Override
+        public void run() {
+            MainActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     @Override
@@ -186,5 +286,11 @@ public class MainActivity extends AppCompatActivity {
         if (query.isCloseConnection()) {
             query = new Query();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timer.cancel();
     }
 }

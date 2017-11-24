@@ -59,6 +59,32 @@
                 android:background="@drawable/add_selector"
                 android:text="CONFIRM"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="5dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="Nama Inventory"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Qty"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Harga"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="User"/>
+        </LinearLayout>
         <com.mobile.pos.view.ExpandableHeightListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,6 +108,11 @@
                 android:id="@+id/search"
                 android:background="@drawable/border_rectangle"/>
         </LinearLayout>
+        <com.mobile.pos.view.ExpandableHeightListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listMenu"
+            android:layout_margin="5dp"/>
         <com.mobile.pos.view.ExpandableHeightGridView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
