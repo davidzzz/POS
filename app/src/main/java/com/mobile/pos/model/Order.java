@@ -1,9 +1,14 @@
 package com.mobile.pos.model;
 
-public class Order {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Order implements Parcelable {
     private String nama, kode, keterangan, uom, wh, printCode;
     private float harga;
     private int qty;
+
+    public Order() {}
 
     public void setNama(String nama) {
         this.nama = nama;
@@ -71,5 +76,41 @@ public class Order {
 
     public String getPrintCode() {
         return printCode;
+    }
+
+    public int describeContents() {
+        return 0;
+    }
+
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(nama);
+        out.writeString(kode);
+        out.writeString(keterangan);
+        out.writeString(uom);
+        out.writeString(wh);
+        out.writeString(printCode);
+        out.writeFloat(harga);
+        out.writeInt(qty);
+    }
+
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+        public Order createFromParcel(Parcel in) {
+            return new Order(in);
+        }
+
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
+
+    private Order(Parcel in) {
+        nama = in.readString();
+        kode = in.readString();
+        keterangan = in.readString();
+        uom = in.readString();
+        wh = in.readString();
+        printCode = in.readString();
+        harga = in.readFloat();
+        qty = in.readInt();
     }
 }
