@@ -93,12 +93,21 @@ public class Query {
         return list;
     }
 
-    public ArrayList<Menu> findDaftarMenu(String kode) {
+    public ArrayList<Menu> findDaftarMenu(String search, String kode) {
         ArrayList<Menu> list = new ArrayList<>();
+        String kategori = "";
+        if (!kode.equals("")) {
+            kategori = " And Category_Code = ?";
+        }
         try {
-            query = "Select Stock_Code,Stock_Name,Stock_UOM,Stock_SellPrice1,WH_No,PrintCode From Allocation Where Category_Code = ? Order By Stock_Name";
+            query = "Select Stock_Code,Stock_Name,Stock_UOM,Stock_SellPrice1,WH_No,PrintCode From Allocation " +
+                    "Where (Stock_Code LIKE ? OR Stock_Name LIKE ?)" + kategori + " Order By Stock_Name";
             stmt = conn.prepareStatement(query);
-            stmt.setString(1, kode);
+            stmt.setString(1, search);
+            stmt.setString(2, search);
+            if (!kode.equals("")) {
+                stmt.setString(3, kode);
+            }
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Menu m = new Menu();
@@ -142,11 +151,11 @@ public class Query {
     public int insertOpenSpec(String kode, String username){
         try {
             Calendar c = Calendar.getInstance();
-            String day = c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "" + c.get(Calendar.DAY_OF_MONTH);
-            String month = (c.get(Calendar.MONTH) + 1) < 10 ? "0" : "" + (c.get(Calendar.MONTH) + 1);
+            String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
+            String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
             String year = String.valueOf(c.get(Calendar.YEAR));
-            String hour = c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "" + c.get(Calendar.HOUR_OF_DAY);
-            String minute = c.get(Calendar.MINUTE) < 10 ? "0" : "" + c.get(Calendar.MINUTE);
+            String hour = (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY);
+            String minute = (c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
             query = "INSERT INTO OpenSpec(Spec_Code,Dep_Code,Open_Date,Open_Time,Spec_MinCharge,Guest_Name,Status,Recept_Name,Spec_ChargeType,Close_Time,LengthTime)" +
                     "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             stmt = conn.prepareStatement(query);
@@ -181,11 +190,11 @@ public class Query {
     public int insertLog(String kode, String depCode, String kodeUser, String namaUser, String desc){
         try {
             Calendar c = Calendar.getInstance();
-            String day = c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "" + c.get(Calendar.DAY_OF_MONTH);
-            String month = (c.get(Calendar.MONTH) + 1) < 10 ? "0" : "" + (c.get(Calendar.MONTH) + 1);
+            String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
+            String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
             String year = String.valueOf(c.get(Calendar.YEAR));
-            String hour = c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "" + c.get(Calendar.HOUR_OF_DAY);
-            String minute = c.get(Calendar.MINUTE) < 10 ? "0" : "" + c.get(Calendar.MINUTE);
+            String hour = (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY);
+            String minute = (c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
 
             query = "INSERT INTO Logging2(Spec_Code,Dep_Code,Date,Time,User_Code,User_Name,Period,Description,Sell_Code)" +
                     "VALUES (?,?,?,?,?,?,?,?,?)";
@@ -222,7 +231,7 @@ public class Query {
             stmt = conn.prepareStatement(query);
             stmt.setString(1, kode);
             ResultSet rs = stmt.executeQuery();
-            return rs.next() ? rs.getInt("jumlah") + 1 : 1;
+            return rs.next() ? rs.getInt("jumlah") : 1;
         } catch (Exception e) {
         }
         return 0;
@@ -261,8 +270,8 @@ public class Query {
     public void insertSellMaster(String kode, String kodeUser){
         try {
             Calendar c = Calendar.getInstance();
-            String day = c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "" + c.get(Calendar.DAY_OF_MONTH);
-            String month = (c.get(Calendar.MONTH) + 1) < 10 ? "0" : "" + (c.get(Calendar.MONTH) + 1);
+            String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
+            String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
             String year = String.valueOf(c.get(Calendar.YEAR));
             String teks = kode + "-" + getFormatString(findEmptyStatus(kode));
 
@@ -286,11 +295,11 @@ public class Query {
     public void insertSellDetail(String kode, String kodeUser, Order o){
         try {
             Calendar c = Calendar.getInstance();
-            String day = c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "" + c.get(Calendar.DAY_OF_MONTH);
-            String month = (c.get(Calendar.MONTH) + 1) < 10 ? "0" : "" + (c.get(Calendar.MONTH) + 1);
+            String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
+            String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
             String year = String.valueOf(c.get(Calendar.YEAR));
-            String hour = c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "" + c.get(Calendar.HOUR_OF_DAY);
-            String minute = c.get(Calendar.MINUTE) < 10 ? "0" : "" + c.get(Calendar.MINUTE);
+            String hour = (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY);
+            String minute = (c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
             String teks = kode + "-" + getFormatString(findEmptyStatus(kode));
             String nomorMeja = String.valueOf(findNomorMeja(kode));
             int nomor = findQueryNumber(day + "-" + month + "-" + year);
@@ -311,7 +320,7 @@ public class Query {
             stmt.setFloat(10, o.getHarga());
             stmt.setString(11, o.getWh());
             stmt.setFloat(12, 0);
-            stmt.setString(13, o.getKeterangan());
+            stmt.setString(13, o.getKeterangan() == null ? "" : o.getKeterangan());
             stmt.setString(14, o.getPrintCode());
             stmt.setFloat(15, 0);
             stmt.setString(16, kodeUser);
