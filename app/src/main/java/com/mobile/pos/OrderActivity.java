@@ -181,4 +181,8 @@ public class OrderActivity extends AppCompatActivity {
         super.onDestroy();
         timer.cancel();
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

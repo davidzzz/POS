@@ -297,4 +297,8 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         timer.cancel();
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

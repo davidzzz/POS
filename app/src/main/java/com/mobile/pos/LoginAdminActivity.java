@@ -100,4 +100,8 @@ public class LoginAdminActivity extends AppCompatActivity {
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }
