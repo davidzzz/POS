@@ -4,15 +4,17 @@ import android.annotation.SuppressLint;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.mobile.pos.Constant;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class ConnectionConfig {
-    private String ip = "192.168.56.1";
+    private String ip = Constant.ip;
     private String classs = "net.sourceforge.jtds.jdbc.Driver";
     private String db = "FBMain";
-    private String un = "sa";
-    private String password = "Password123";
+    private String un = Constant.username;
+    private String password = Constant.password;
 
     @SuppressLint("NewApi")
     public Connection CONN(String db) {
