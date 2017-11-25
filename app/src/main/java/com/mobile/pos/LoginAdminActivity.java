@@ -35,6 +35,15 @@ public class LoginAdminActivity extends AppCompatActivity {
                 attemptLogin();
             }
         });
+        Button kembali = (Button) findViewById(R.id.kembali);
+        kembali.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginAdminActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
     private void attemptLogin() {
