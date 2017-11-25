@@ -1,5 +1,7 @@
 package com.mobile.pos;
 
+import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +26,7 @@ import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
+import com.mobile.pos.util.ControlApplication;
 import com.mobile.pos.view.ExpandableHeightGridView;
 import com.mobile.pos.view.ExpandableHeightListView;
 
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     Spec spec;
     String userCode, username, kategoriMeja;
     Timer timer = new Timer();
+    ControlApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,5 +304,32 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Override
+    public void onUserInteraction()
+    {
+        super.onUserInteraction();
+        app = new ControlApplication();
+        app.touch();
+        Timer timer2 = new Timer();
+        timer2.scheduleAtFixedRate(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                        if (myKM.inKeyguardRestrictedInputMode() && confirm.isEnabled()) {
+                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                        if (app.isStop()) {
+                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                    }
+                }, 0, 5000
+        );
     }
 }
