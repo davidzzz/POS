@@ -1,6 +1,8 @@
 package com.mobile.pos;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +28,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
+        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        Constant.ip = getPrefs.getString("ip", Constant.ip);
+        Constant.username = getPrefs.getString("username", Constant.username);
+        Constant.password = getPrefs.getString("password", Constant.password);
         mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
 
@@ -35,6 +40,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+        Button loginAdmin = (Button) findViewById(R.id.login_admin);
+        loginAdmin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this, LoginAdminActivity.class);
+                startActivity(i);
+                finish();
             }
         });
     }

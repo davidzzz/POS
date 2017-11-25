@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mobile.pos.LoginActivity">
+    tools:context="com.mobile.pos.LoginAdminActivity">
 
     <ImageView
         android:id="@+id/imageView"
@@ -89,15 +89,6 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_login"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/login_admin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginTop="16dp"
-                android:text="LOGIN ADMIN"
                 android:textStyle="bold" />
 
         </LinearLayout>
