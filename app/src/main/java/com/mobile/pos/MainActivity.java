@@ -186,11 +186,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             ArrayList<Order> listArray = data.getParcelableArrayListExtra("orderArray");
+            boolean reset = data.getBooleanExtra("reset", false);
             listOrder.clear();
             for (int i = 0; i < listArray.size(); i++) {
                 listOrder.add(listArray.get(i));
             }
             orderAdapter.notifyDataSetChanged();
+            if (reset) {
+                activeState(true);
+            }
         }
     }
 

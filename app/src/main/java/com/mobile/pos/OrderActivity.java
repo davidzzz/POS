@@ -97,8 +97,6 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 query.closeConnection();
-                listOrder.clear();
-                orderAdapter.notifyDataSetChanged();
                 setResult(1, getIntent().putParcelableArrayListExtra("orderArray", listOrder));
                 finish();
             }
@@ -107,6 +105,11 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 query.deleteOrderLock(kodeMeja);
+                listOrder.clear();
+                orderAdapter.notifyDataSetChanged();
+                setResult(1, getIntent().putParcelableArrayListExtra("orderArray", listOrder));
+                setResult(1, getIntent().putExtra("reset", true));
+                finish();
             }
         });
         order.setOnClickListener(new View.OnClickListener() {
