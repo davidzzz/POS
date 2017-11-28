@@ -30,6 +30,7 @@ import com.mobile.pos.util.ControlApplication;
 import com.mobile.pos.view.ExpandableHeightGridView;
 import com.mobile.pos.view.ExpandableHeightListView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -130,9 +131,18 @@ public class MainActivity extends AppCompatActivity {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String teks = "";
+                DecimalFormat format = new DecimalFormat();
+                float total = 0;
+                for (int j = 0; j < listOrder.size(); j++) {
+                    Order o = listOrder.get(j);
+                    total += o.getHarga();
+                    teks += o.getQty() + " " + o.getNama() + " @ Rp." + format.format(o.getHarga()) + "\n";
+                }
+                teks += "Total = Rp." + format.format(total);
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("KONFIRMASI PESANAN");
-                builder.setMessage("Apakah pesanan sudah benar?");
+                builder.setMessage("Apakah pesanan ini sudah benar?\n" + teks);
                 builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
