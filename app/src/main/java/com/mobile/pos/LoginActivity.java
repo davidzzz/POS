@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mUser;
         private final String mPassword;
-        private String z, username;
+        private String z, username, date;
 
         UserLoginTask(String user, String password) {
             mUser = user;
@@ -132,6 +132,11 @@ public class LoginActivity extends AppCompatActivity {
                         return false;
                     }
                     username = rs.getString("User_Name");
+                    query = "select PublicDate from PublicDate";
+                    stmt = con.createStatement();
+                    rs = stmt.executeQuery(query);
+                    rs.next();
+                    date = rs.getString("PublicDate");
                 }
                 con.close();
             } catch (Exception ex) {
@@ -149,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent i = new Intent(LoginActivity.this, MainActivity.class);
                 i.putExtra("userCode", mUser);
                 i.putExtra("username", username);
+                i.putExtra("date", date);
                 startActivity(i);
                 finish();
             } else {

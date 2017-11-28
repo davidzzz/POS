@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.pos.adapter.KategoriAdapter;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     ExpandableHeightListView listView, listMenu;
     ExpandableHeightGridView gridView;
     EditText search;
+    TextView tanggal;
     ArrayList<Kategori> listSpecKat = new ArrayList<>();
     ArrayList<Kategori> listKategori = new ArrayList<>();
     ArrayList<Spec> listSpec = new ArrayList<>();
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     MenuAdapter adapter;
     Query query;
     Spec spec;
-    String userCode, username, kategoriMeja;
+    String userCode, username, kategoriMeja, date;
     Timer timer = new Timer();
     ControlApplication app;
 
@@ -67,11 +69,14 @@ public class MainActivity extends AppCompatActivity {
         kategori = (Spinner) findViewById(R.id.kategori);
         nomor = (Spinner) findViewById(R.id.nomor);
         search = (EditText) findViewById(R.id.search);
+        tanggal = (TextView) findViewById(R.id.tanggal);
         listView = (ExpandableHeightListView) findViewById(R.id.listView);
         listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         gridView = (ExpandableHeightGridView) findViewById(R.id.gridView);
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
+        date = getIntent().getStringExtra("date");
+        tanggal.setText(date);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -269,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("kode", k.getKode());
                 i.putExtra("userCode", userCode);
                 i.putExtra("username", username);
+                i.putExtra("date", date);
                 i.putExtra("listOrder", listOrder);
                 query.closeConnection();
                 startActivityForResult(i, 1);

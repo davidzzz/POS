@@ -39,13 +39,13 @@ import java.util.TimerTask;
 
 public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
-    TextView kategori, nomor;
+    TextView kategori, nomor, tanggal;
     ExpandableHeightListView listView, listMenu;
     EditText search;
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
-    String username, kode, kodeMeja, kategoriMeja, userCode;
+    String username, kode, kodeMeja, kategoriMeja, userCode, date;
     OrderAdapter orderAdapter;
     MenuAdapter adapter;
     Timer timer = new Timer();
@@ -61,6 +61,7 @@ public class OrderActivity extends AppCompatActivity {
         order = (Button) findViewById(R.id.order);
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
+        tanggal = (TextView) findViewById(R.id.tanggal);
         search = (EditText) findViewById(R.id.search);
         listView = (ExpandableHeightListView) findViewById(R.id.listView);
         listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
@@ -70,6 +71,8 @@ public class OrderActivity extends AppCompatActivity {
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
         listOrder = getIntent().getParcelableArrayListExtra("listOrder");
+        date = getIntent().getStringExtra("date");
+        tanggal.setText(date);
         kategori.setText(kategoriMeja);
         nomor.setText(kodeMeja);
         search.addTextChangedListener(new TextWatcher() {
