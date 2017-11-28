@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -17,8 +18,10 @@ import com.mobile.pos.OrderActivity;
 import com.mobile.pos.R;
 import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
+import com.mobile.pos.sql.Query;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -26,12 +29,16 @@ public class MenuAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Menu> list;
+    private String date;
     private OrderAdapter orderAdapter;
+    private Query query;
 
-    public MenuAdapter(Context context, ArrayList<Menu> list, OrderAdapter orderAdapter) {
+    public MenuAdapter(Context context, ArrayList<Menu> list, String date, OrderAdapter orderAdapter, Query query) {
         this.context = context;
         this.list = list;
+        this.date = date;
         this.orderAdapter = orderAdapter;
+        this.query = query;
     }
 
     @Override
@@ -96,23 +103,45 @@ public class MenuAdapter extends BaseAdapter {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (orderAdapter.getOrder(m.getKode()) != null) {
-                    Order o = orderAdapter.getOrder(m.getKode());
-                    o.setKeterangan(m.getKeterangan());
-                    o.setQty(Integer.parseInt(teksQty.getText().toString()));
-                } else {
-                    Order o = new Order();
-                    o.setKode(m.getKode());
-                    o.setNama(m.getNama());
-                    o.setKeterangan(m.getKeterangan());
-                    o.setHarga(m.getHarga());
-                    o.setUom(m.getUom());
-                    o.setWh(m.getWh());
-                    o.setPrintCode(m.getPrintCode());
-                    o.setQty(Integer.parseInt(teksQty.getText().toString()));
-                    orderAdapter.getList().add(o);
+                ResultSet rs = query.cekStok(date, m.getKode());
+                int foodSales = 0;
+                int foodQty = 0;
+                boolean cek = true;
+                if (rs != null) {
+                    try {
+                        foodSales = rs.getInt("Food_Sales");
+                        foodQty = rs.getInt("Food_Qty");
+                    } catch (Exception e) {
+                    }
+                    if (foodSales >= foodQty) {
+                        Toast.makeText(context, "SOLD OUT", Toast.LENGTH_SHORT).show();
+                        cek = false;
+                    } else {
+                        if (Integer.parseInt(teksQty.getText().toString()) > foodQty - foodSales) {
+                            Toast.makeText(context, "SISA YANG BISA DIORDER " + (foodQty - foodSales), Toast.LENGTH_SHORT).show();
+                            cek = false;
+                        }
+                    }
                 }
-                orderAdapter.notifyDataSetChanged();
+                if (cek) {
+                    if (orderAdapter.getOrder(m.getKode()) != null) {
+                        Order o = orderAdapter.getOrder(m.getKode());
+                        o.setKeterangan(m.getKeterangan());
+                        o.setQty(Integer.parseInt(teksQty.getText().toString()));
+                    } else {
+                        Order o = new Order();
+                        o.setKode(m.getKode());
+                        o.setNama(m.getNama());
+                        o.setKeterangan(m.getKeterangan());
+                        o.setHarga(m.getHarga());
+                        o.setUom(m.getUom());
+                        o.setWh(m.getWh());
+                        o.setPrintCode(m.getPrintCode());
+                        o.setQty(Integer.parseInt(teksQty.getText().toString()));
+                        orderAdapter.getList().add(o);
+                    }
+                    orderAdapter.notifyDataSetChanged();
+                }
             }
         });
         min.setOnClickListener(new View.OnClickListener() {

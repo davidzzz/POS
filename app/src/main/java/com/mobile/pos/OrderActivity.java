@@ -128,7 +128,7 @@ public class OrderActivity extends AppCompatActivity {
                 float total = 0;
                 for (int j = 0; j < listOrder.size(); j++) {
                     Order o = listOrder.get(j);
-                    total += o.getHarga();
+                    total += o.getQty() * o.getHarga();
                     teks += o.getQty() + " " + o.getNama() + " @ Rp." + format.format(o.getHarga()) + "\n";
                 }
                 teks += "Total = Rp." + format.format(total);
@@ -164,7 +164,7 @@ public class OrderActivity extends AppCompatActivity {
         listView.setAdapter(orderAdapter);
         listView.setExpanded(true);
         listView.setEnabled(false);
-        adapter = new MenuAdapter(this, list, orderAdapter);
+        adapter = new MenuAdapter(this, list, date, orderAdapter, query);
         listMenu.setAdapter(adapter);
         listMenu.setExpanded(true);
         listMenu.setEnabled(false);

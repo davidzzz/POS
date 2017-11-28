@@ -261,6 +261,21 @@ public class Query {
         return 0;
     }
 
+    public ResultSet cekStok(String tanggal, String kode) {
+        try {
+            query = "Select Food_Code,Food_Qty,ISNULL((Select Sum(Sell_Qty) As Total From Sell_Detail " +
+                    "Where Stock_Code=FoodAdmin.Food_Code And Sell_Date=?),0) as Food_Sales from FoodAdmin Where Food_Date=? and Food_Code=?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, tanggal);
+            stmt.setString(2, tanggal);
+            stmt.setString(3, kode);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() ? rs : null;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
     private String getFormatString(int n) {
         if (n < 10) return "00" + String.valueOf(n);
         else if (n > 9 && n < 100) return "0" + String.valueOf(n);
