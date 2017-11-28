@@ -69,7 +69,7 @@ public class MenuAdapter extends BaseAdapter {
         }
         final TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
         teksQty.setText("0");
-        Button btn = (Button) convertView.findViewById(R.id.btn);
+        ImageView btn = (ImageView) convertView.findViewById(R.id.btn);
         Button order = (Button) convertView.findViewById(R.id.order);
         Button min = (Button) convertView.findViewById(R.id.min);
         Button pos = (Button) convertView.findViewById(R.id.pos);
