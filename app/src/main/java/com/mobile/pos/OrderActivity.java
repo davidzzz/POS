@@ -1,36 +1,23 @@
 package com.mobile.pos;
 
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.pos.adapter.KategoriAdapter;
 import com.mobile.pos.adapter.MenuAdapter;
 import com.mobile.pos.adapter.OrderAdapter;
-import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
-import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
 import com.mobile.pos.view.ExpandableHeightListView;
-import com.mobile.pos.view.OnSwipeTouchListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -41,14 +28,12 @@ public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
     TextView kategori, nomor, tanggal;
     ExpandableHeightListView listView, listMenu;
-    EditText search;
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
     String username, kode, kodeMeja, kategoriMeja, userCode, date;
     OrderAdapter orderAdapter;
     MenuAdapter adapter;
-    Timer timer = new Timer();
     ControlApplication app;
 
     @Override
@@ -62,7 +47,6 @@ public class OrderActivity extends AppCompatActivity {
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
         tanggal = (TextView) findViewById(R.id.tanggal);
-        search = (EditText) findViewById(R.id.search);
         listView = (ExpandableHeightListView) findViewById(R.id.listView);
         listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         kategoriMeja = getIntent().getStringExtra("kategoriMeja");
@@ -75,32 +59,6 @@ public class OrderActivity extends AppCompatActivity {
         tanggal.setText(date);
         kategori.setText(kategoriMeja);
         nomor.setText(kodeMeja);
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                timer.cancel();
-                timer = new Timer();
-                timer.schedule(
-                        new TimerTask() {
-                            @Override
-                            public void run() {
-                                daftarMenu();
-                            }
-                        },
-                        500
-                );
-            }
-        });
         kembali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,9 +130,8 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void daftarMenu(){
-        String teks = search.getText().toString();
         list.clear();
-        ArrayList<Menu> listArray = query.findDaftarMenu("%" + teks + "%", kode);
+        ArrayList<Menu> listArray = query.findDaftarMenu("%", kode);
         for (int i = 0; i < listArray.size(); i++) {
             list.add(listArray.get(i));
         }
@@ -191,12 +148,6 @@ public class OrderActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        timer.cancel();
     }
 
     @Override

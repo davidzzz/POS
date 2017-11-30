@@ -94,25 +94,6 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/listView"
                 android:layout_margin="5dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="5dp">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="3dp"
-                    android:text="Quick Search"/>
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:inputType="text"
-                    android:id="@+id/search"
-                    android:background="@drawable/border_rectangle"/>
-            </LinearLayout>
             <com.mobile.pos.view.ExpandableHeightListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
