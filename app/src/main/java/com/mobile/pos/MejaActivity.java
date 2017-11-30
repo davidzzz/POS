@@ -3,6 +3,7 @@ package com.mobile.pos;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.pos.model.Kategori;
@@ -18,6 +20,7 @@ import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,6 +28,7 @@ public class MejaActivity extends AppCompatActivity {
     Query query;
     Button confirm, billing;
     Spinner kategori, nomor;
+    TextView footer;
     Spec spec;
     String userCode, username, date, kategoriMeja;
     ArrayList<Kategori> listSpecKat = new ArrayList<>();
@@ -32,6 +36,7 @@ public class MejaActivity extends AppCompatActivity {
     ArrayAdapter<Kategori> adapter1;
     ArrayAdapter<Spec> adapter2;
     ControlApplication app;
+    CountDownTimer newtimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +47,21 @@ public class MejaActivity extends AppCompatActivity {
         billing = (Button) findViewById(R.id.billing);
         kategori = (Spinner) findViewById(R.id.kategori);
         nomor = (Spinner) findViewById(R.id.nomor);
+        footer = (TextView) findViewById(R.id.footer);
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
         date = getIntent().getStringExtra("date");
+        newtimer = new CountDownTimer(1000000000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                Calendar c = Calendar.getInstance();
+                footer.setText(username + ", " + date + " " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE));
+            }
+            public void onFinish() {
+
+            }
+        };
+        newtimer.start();
+        footer.setText(username + ", " + date + " ");
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,6 +163,7 @@ public class MejaActivity extends AppCompatActivity {
                     public void run() {
                         KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                         if (myKM.inKeyguardRestrictedInputMode() || app.isStop()) {
+                            newtimer.cancel();
                             Intent i = new Intent(MejaActivity.this, LoginActivity.class);
                             startActivity(i);
                             finish();

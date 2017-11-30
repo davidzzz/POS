@@ -83,9 +83,9 @@
                     android:layout_weight="1"
                     android:text="User"/>
             </LinearLayout>
-            <com.mobile.pos.view.ExpandableHeightListView
+            <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:id="@+id/listView"
                 android:layout_margin="5dp"/>
             <LinearLayout
@@ -124,20 +124,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="5dp"
         android:background="#0099FF">
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tanggal"
-            android:textSize="20sp"
-            android:padding="10dp"/>
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="www.tssoft.co.id"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="08-1163-1168"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:text="Cancel All"
                 android:id="@+id/cancel"
                 android:layout_margin="5dp"
@@ -145,7 +153,7 @@
                 android:background="@drawable/bg_red"/>
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:text="Confirm Order"
                 android:id="@+id/order"
                 android:layout_margin="5dp"

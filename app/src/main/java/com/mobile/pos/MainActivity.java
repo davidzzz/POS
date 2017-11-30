@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,10 +39,11 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
     Button cancel, order;
-    ExpandableHeightListView listView, listMenu;
+    ListView listView;
+    ExpandableHeightListView listMenu;
     ExpandableHeightGridView gridView;
     EditText search;
-    TextView tanggal, kategori, nomor;
+    TextView kategori, nomor;
     ArrayList<Kategori> listKategori = new ArrayList<>();
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
@@ -62,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
         search = (EditText) findViewById(R.id.search);
-        tanggal = (TextView) findViewById(R.id.tanggal);
-        listView = (ExpandableHeightListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
         listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         gridView = (ExpandableHeightGridView) findViewById(R.id.gridView);
         kategoriMeja = getIntent().getStringExtra("kategoriMeja");
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
         date = getIntent().getStringExtra("date");
-        tanggal.setText(date);
         kategori.setText(kategoriMeja);
         nomor.setText(kodeMeja);
         search.addTextChangedListener(new TextWatcher() {
@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
         getKategori();
         orderAdapter = new OrderAdapter(this, userCode, listOrder);
         listView.setAdapter(orderAdapter);
-        listView.setExpanded(true);
         listView.setEnabled(false);
         adapter = new MenuAdapter(this, list, date, orderAdapter, query);
         listMenu.setAdapter(adapter);

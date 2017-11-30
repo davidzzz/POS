@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +27,9 @@ import java.util.TimerTask;
 
 public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
-    TextView kategori, nomor, tanggal;
-    ExpandableHeightListView listView, listMenu;
+    TextView kategori, nomor;
+    ListView listView;
+    ExpandableHeightListView listMenu;
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
@@ -46,8 +48,7 @@ public class OrderActivity extends AppCompatActivity {
         order = (Button) findViewById(R.id.order);
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
-        tanggal = (TextView) findViewById(R.id.tanggal);
-        listView = (ExpandableHeightListView) findViewById(R.id.listView);
+        listView = (ListView) findViewById(R.id.listView);
         listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         kategoriMeja = getIntent().getStringExtra("kategoriMeja");
         kodeMeja = getIntent().getStringExtra("kodeMeja");
@@ -56,7 +57,6 @@ public class OrderActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         listOrder = getIntent().getParcelableArrayListExtra("listOrder");
         date = getIntent().getStringExtra("date");
-        tanggal.setText(date);
         kategori.setText(kategoriMeja);
         nomor.setText(kodeMeja);
         kembali.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +120,6 @@ public class OrderActivity extends AppCompatActivity {
         });
         orderAdapter = new OrderAdapter(this, userCode, listOrder);
         listView.setAdapter(orderAdapter);
-        listView.setExpanded(true);
         listView.setEnabled(false);
         adapter = new MenuAdapter(this, list, date, orderAdapter, query);
         listMenu.setAdapter(adapter);
