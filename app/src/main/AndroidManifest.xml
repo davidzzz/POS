@@ -22,7 +22,7 @@
         </activity>
         <activity android:name=".OrderActivity" />
         <activity android:name=".LoginAdminActivity" />
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".SettingActivity" />
     </application>
 
 </manifest>

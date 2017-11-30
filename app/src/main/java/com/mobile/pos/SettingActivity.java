@@ -21,6 +21,9 @@ public class SettingActivity extends AppCompatActivity {
         teksIP = (EditText) findViewById(R.id.ip);
         teksUser = (EditText) findViewById(R.id.username);
         teksPass = (EditText) findViewById(R.id.password);
+        teksIP.setText(Constant.ip);
+        teksUser.setText(Constant.username);
+        teksPass.setText(Constant.password);
         getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         Button button = (Button) findViewById(R.id.ok);
         Button kembali = (Button) findViewById(R.id.kembali);
