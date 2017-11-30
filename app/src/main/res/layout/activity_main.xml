@@ -32,12 +32,16 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Kategori Meja"/>
+                            android:layout_weight="2"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:text="Kategori Unit"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
                             android:id="@+id/kategori"/>
                     </LinearLayout>
                     <LinearLayout
@@ -47,12 +51,16 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="No. Meja"/>
+                            android:layout_weight="2"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:text="No. Unit"/>
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
+                            android:layout_weight="3"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
                             android:id="@+id/nomor"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -61,33 +69,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="5dp">
+                android:background="#ffffcc"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:textStyle="bold"
                     android:text="Nama Inventory"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textStyle="bold"
                     android:text="Qty"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textStyle="bold"
                     android:text="Harga"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textStyle="bold"
                     android:text="User"/>
             </LinearLayout>
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:id="@+id/listView"
-                android:layout_margin="5dp"/>
+                android:background="#ffffcc"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +143,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:background="#0099FF">
+        android:background="#FF9933">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
