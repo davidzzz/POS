@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             if (success) {
-                Intent i = new Intent(LoginActivity.this, MainActivity.class);
+                Intent i = new Intent(LoginActivity.this, MejaActivity.class);
                 i.putExtra("userCode", mUser);
                 i.putExtra("username", username);
                 i.putExtra("date", date);

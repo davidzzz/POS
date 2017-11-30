@@ -37,24 +37,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    Button confirm, cancel, order;
-    Spinner kategori, nomor;
+    Button cancel, order;
     ExpandableHeightListView listView, listMenu;
     ExpandableHeightGridView gridView;
     EditText search;
-    TextView tanggal;
-    ArrayList<Kategori> listSpecKat = new ArrayList<>();
+    TextView tanggal, kategori, nomor;
     ArrayList<Kategori> listKategori = new ArrayList<>();
-    ArrayList<Spec> listSpec = new ArrayList<>();
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
-    ArrayAdapter<Kategori> adapter1;
-    ArrayAdapter<Spec> adapter2;
     OrderAdapter orderAdapter;
     MenuAdapter adapter;
     Query query;
-    Spec spec;
-    String userCode, username, kategoriMeja, date;
+    String userCode, username, kategoriMeja, kodeMeja, date;
     Timer timer = new Timer();
     ControlApplication app;
 
@@ -63,20 +57,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         query = new Query();
-        confirm = (Button) findViewById(R.id.confirm);
         cancel = (Button) findViewById(R.id.cancel);
         order = (Button) findViewById(R.id.order);
-        kategori = (Spinner) findViewById(R.id.kategori);
-        nomor = (Spinner) findViewById(R.id.nomor);
+        kategori = (TextView) findViewById(R.id.kategori);
+        nomor = (TextView) findViewById(R.id.nomor);
         search = (EditText) findViewById(R.id.search);
         tanggal = (TextView) findViewById(R.id.tanggal);
         listView = (ExpandableHeightListView) findViewById(R.id.listView);
         listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         gridView = (ExpandableHeightGridView) findViewById(R.id.gridView);
+        kategoriMeja = getIntent().getStringExtra("kategoriMeja");
+        kodeMeja = getIntent().getStringExtra("kodeMeja");
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
         date = getIntent().getStringExtra("date");
         tanggal.setText(date);
+        kategori.setText(kategoriMeja);
+        nomor.setText(kodeMeja);
         search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -103,34 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         });
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                spec = (Spec) nomor.getSelectedItem();
-                if (spec.isKtv()) {
-                    if (spec.getStatus().equals("V")) {
-                        Toast.makeText(MainActivity.this, "KTV wajib dibuka melalui POS", Toast.LENGTH_SHORT).show();
-                    } else {
-                        orderLock();
-                    }
-                } else {
-                    if (spec.getStatus().equals("V")) {
-                        query.updateSpec(spec.getKode());
-                    }
-                    orderLock();
-                }
-            }
-        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                query.deleteOrderLock(spec.getKode());
+                query.deleteOrderLock(kodeMeja);
                 listOrder.clear();
                 orderAdapter.notifyDataSetChanged();
                 search.setText("");
                 list.clear();
                 adapter.notifyDataSetChanged();
-                activeState(true);
+                //activeState(true);
             }
         });
         order.setOnClickListener(new View.OnClickListener() {
@@ -151,20 +130,20 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        query.insertSellMaster(spec.getKode(), userCode);
+                        query.insertSellMaster(kodeMeja, userCode);
                         for (int j = 0; j < listOrder.size(); j++) {
                             Order o = listOrder.get(j);
-                            query.insertSellDetail(spec.getKode(), userCode, o);
-                            query.insertLog(spec.getKode(), "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
+                            query.insertSellDetail(kodeMeja, userCode, o);
+                            query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
                         }
-                        query.deleteOrderLock(spec.getKode());
+                        query.deleteOrderLock(kodeMeja);
                         listOrder.clear();
                         orderAdapter.notifyDataSetChanged();
                         search.setText("");
                         list.clear();
                         adapter.notifyDataSetChanged();
                         Toast.makeText(MainActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
-                        activeState(true);
+                        //activeState(true);
                     }
                 });
                 builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
@@ -177,9 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 alert.show();
             }
         });
-        getKategoriMeja();
         getKategori();
-        activeState(true);
         orderAdapter = new OrderAdapter(this, userCode, listOrder);
         listView.setAdapter(orderAdapter);
         listView.setExpanded(true);
@@ -190,73 +167,16 @@ public class MainActivity extends AppCompatActivity {
         listMenu.setEnabled(false);
     }
 
-    public void activeState(boolean state) {
-        kategori.setEnabled(state);
-        nomor.setEnabled(state);
-        confirm.setEnabled(state);
-        listView.setEnabled(!state);
-        search.setEnabled(!state);
-        gridView.setEnabled(!state);
-        cancel.setEnabled(!state);
-        order.setEnabled(!state);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             ArrayList<Order> listArray = data.getParcelableArrayListExtra("orderArray");
-            boolean reset = data.getBooleanExtra("reset", false);
             listOrder.clear();
             for (int i = 0; i < listArray.size(); i++) {
                 listOrder.add(listArray.get(i));
             }
             orderAdapter.notifyDataSetChanged();
-            if (reset) {
-                activeState(true);
-            }
         }
-    }
-
-    public void orderLock() {
-        int status = query.findOrderLock(spec.getKode());
-        if (status == 1) {
-            int a = query.insertOpenSpec(spec.getKode(), username);
-            int b = query.insertOrderLock(spec.getKode());
-            int c = query.insertLog(spec.getKode(), "DEP", userCode, username, "BUKA MEJA " + spec.getKode());
-            if (a > 0 && b > 0 && c > 0) {
-                activeState(false);
-            } else {
-                Toast.makeText(this, "Terjadi kesalahan saat melakukan konfirmasi", Toast.LENGTH_SHORT).show();
-            }
-        } else if (status == 0) {
-            Toast.makeText(this, "Unit sedang diorder oleh user lain", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void getKategoriMeja() {
-        listSpecKat = query.findSpecCat();
-        adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listSpecKat);
-        kategori.setAdapter(adapter1);
-        kategori.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Kategori k = (Kategori) adapterView.getItemAtPosition(i);
-                getNomorMeja(k.getKode());
-                kategoriMeja = k.getNama();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-    }
-
-    public void getNomorMeja(String kode) {
-        listSpec.clear();
-        listSpec = query.findSpec(kode);
-        adapter2 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, listSpec);
-        nomor.setAdapter(adapter2);
     }
 
     public void getKategori() {
@@ -270,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 Kategori k = (Kategori)adapterView.getItemAtPosition(position);
                 Intent i = new Intent(MainActivity.this, OrderActivity.class);
                 i.putExtra("kategoriMeja", kategoriMeja);
-                i.putExtra("kodeMeja", spec.getKode());
+                i.putExtra("kodeMeja", kodeMeja);
                 i.putExtra("kode", k.getKode());
                 i.putExtra("userCode", userCode);
                 i.putExtra("username", username);
@@ -333,12 +253,6 @@ public class MainActivity extends AppCompatActivity {
                 new TimerTask() {
                     @Override
                     public void run() {
-                        KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                        if (myKM.inKeyguardRestrictedInputMode() && confirm.isEnabled()) {
-                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
                         if (app.isStop()) {
                             Intent i = new Intent(MainActivity.this, LoginActivity.class);
                             startActivity(i);

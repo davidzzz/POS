@@ -23,6 +23,7 @@
         <activity android:name=".OrderActivity" />
         <activity android:name=".LoginAdminActivity" />
         <activity android:name=".SettingActivity" />
+        <activity android:name=".MejaActivity"></activity>
     </application>
 
 </manifest>

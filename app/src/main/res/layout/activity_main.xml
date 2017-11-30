@@ -34,7 +34,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Kategori Meja"/>
-                        <Spinner
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
@@ -49,20 +49,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="No. Meja"/>
-                        <Spinner
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="2"
                             android:id="@+id/nomor"/>
                     </LinearLayout>
                 </LinearLayout>
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/confirm"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/add_selector"
-                    android:text="CONFIRM"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

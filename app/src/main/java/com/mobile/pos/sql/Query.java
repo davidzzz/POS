@@ -148,12 +148,9 @@ public class Query {
         }
     }
 
-    public int insertOpenSpec(String kode, String username){
+    public int insertOpenSpec(String kode, String username, String date){
         try {
             Calendar c = Calendar.getInstance();
-            String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
-            String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
-            String year = String.valueOf(c.get(Calendar.YEAR));
             String hour = (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY);
             String minute = (c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
             query = "INSERT INTO OpenSpec(Spec_Code,Dep_Code,Open_Date,Open_Time,Spec_MinCharge,Guest_Name,Status,Recept_Name,Spec_ChargeType,Close_Time,LengthTime)" +
@@ -161,7 +158,7 @@ public class Query {
             stmt = conn.prepareStatement(query);
             stmt.setString(1, kode);
             stmt.setString(2, "POS");
-            stmt.setString(3, day + "-" + month + "-" + year);
+            stmt.setString(3, date);
             stmt.setString(4, hour + ":" + minute);
             stmt.setInt(5, 0);
             stmt.setString(6, "CASH");
