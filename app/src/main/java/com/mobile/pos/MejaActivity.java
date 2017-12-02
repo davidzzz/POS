@@ -12,15 +12,19 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Timer;
@@ -53,6 +57,14 @@ public class MejaActivity extends AppCompatActivity {
         userCode = getIntent().getStringExtra("userCode");
         username = getIntent().getStringExtra("username");
         date = getIntent().getStringExtra("date");
+        String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/Banner.jpg";
+        File file = new File(path);
+        if (file.exists()) {
+            ImageView banner = (ImageView) findViewById(R.id.banner);
+            Glide.with(this)
+                    .load(path)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(banner);
+        }
         newtimer = new CountDownTimer(1000000000, 1000) {
             public void onTick(long millisUntilFinished) {
                 Calendar c = Calendar.getInstance();
