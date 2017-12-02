@@ -173,10 +173,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getKategori();
-        orderAdapter = new OrderAdapter(this, userCode, listOrder);
+        orderAdapter = new OrderAdapter(this, listOrder, order);
         listView.setAdapter(orderAdapter);
         listView.setEnabled(false);
-        adapter = new MenuAdapter(this, list, date, orderAdapter, query);
+        adapter = new MenuAdapter(this, list, date, orderAdapter, query, order);
         listMenu.setAdapter(adapter);
         listMenu.setExpanded(true);
         listMenu.setEnabled(false);

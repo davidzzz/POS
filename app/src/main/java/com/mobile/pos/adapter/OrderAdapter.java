@@ -23,24 +23,15 @@ public class OrderAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private ArrayList<Order> list;
-    private String userCode;
+    private Button button;
 
-    public OrderAdapter(Context context, String userCode, ArrayList<Order> list) {
+    public OrderAdapter(Context context, ArrayList<Order> list, Button button) {
         this.context = context;
         this.list = list;
-        this.userCode = userCode;
+        this.button = button;
     }
 
     public ArrayList<Order> getList() { return list; }
-
-    public Order getOrder(String kode){
-        for (int i = 0; i < list.size(); i++){
-            if (list.get(i).getKode().equals(kode)){
-                return list.get(i);
-            }
-        }
-        return null;
-    }
 
     @Override
     public int getCount() { return list.size(); }
@@ -65,8 +56,8 @@ public class OrderAdapter extends BaseAdapter {
         teksHarga.setText(format.format(o.getHarga()));
         TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
         teksQty.setText(String.valueOf(o.getQty()));
-        TextView teksUser = (TextView) convertView.findViewById(R.id.user);
-        teksUser.setText(userCode);
+        TextView teksKeterangan = (TextView) convertView.findViewById(R.id.keterangan);
+        teksKeterangan.setText(o.getKeterangan());
         final Button delete = (Button) convertView.findViewById(R.id.delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +71,9 @@ public class OrderAdapter extends BaseAdapter {
                         delete.setVisibility(View.GONE);
                         list.remove(position);
                         notifyDataSetChanged();
+                        if (list.size() == 0) {
+                            button.setEnabled(false);
+                        }
                     }
                 });
                 builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {

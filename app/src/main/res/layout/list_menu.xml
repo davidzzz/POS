@@ -20,12 +20,13 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:id="@+id/nama"
                 android:paddingRight="3dp"/>
             <ImageView
@@ -35,16 +36,25 @@
                 android:src="@drawable/pencil"
                 android:focusable="false"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/harga"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/order"
-            android:text="Order"
-            android:focusable="false"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:id="@+id/harga"
+                android:paddingRight="3dp"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:id="@+id/order"
+                android:text="Order"
+                android:background="#FF9933"
+                android:focusable="false"/>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -57,17 +67,20 @@
             android:layout_height="40dp"
             android:id="@+id/min"
             android:text="-"
+            android:background="#CCCCCC"
             android:focusable="false"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/qty"
+            android:textSize="14sp"
             android:text="0"/>
         <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:id="@+id/pos"
             android:text="+"
+            android:background="#FF9933"
             android:focusable="false"/>
     </LinearLayout>
 

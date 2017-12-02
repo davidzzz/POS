@@ -33,13 +33,15 @@ public class MenuAdapter extends BaseAdapter {
     private String date;
     private OrderAdapter orderAdapter;
     private Query query;
+    private Button button;
 
-    public MenuAdapter(Context context, ArrayList<Menu> list, String date, OrderAdapter orderAdapter, Query query) {
+    public MenuAdapter(Context context, ArrayList<Menu> list, String date, OrderAdapter orderAdapter, Query query, Button button) {
         this.context = context;
         this.list = list;
         this.date = date;
         this.orderAdapter = orderAdapter;
         this.query = query;
+        this.button = button;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class MenuAdapter extends BaseAdapter {
                     .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
         }
         final TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
-        teksQty.setText("0");
+        teksQty.setText("1");
         ImageView btn = (ImageView) convertView.findViewById(R.id.btn);
         Button order = (Button) convertView.findViewById(R.id.order);
         Button min = (Button) convertView.findViewById(R.id.min);
@@ -89,12 +91,19 @@ public class MenuAdapter extends BaseAdapter {
                 dialog.setContentView(R.layout.keterangan);
                 final EditText teksKeterangan = (EditText) dialog.findViewById(R.id.keterangan);
                 Button ok = (Button) dialog.findViewById(R.id.ok);
+                Button cancel = (Button) dialog.findViewById(R.id.cancel);
                 teksKeterangan.setText(m.getKeterangan());
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         String keterangan = teksKeterangan.getText().toString();
                         m.setKeterangan(keterangan);
+                        dialog.dismiss();
+                    }
+                });
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                         dialog.dismiss();
                     }
                 });
@@ -125,23 +134,21 @@ public class MenuAdapter extends BaseAdapter {
                     }
                 }
                 if (cek) {
-                    if (orderAdapter.getOrder(m.getKode()) != null) {
-                        Order o = orderAdapter.getOrder(m.getKode());
-                        o.setKeterangan(m.getKeterangan());
-                        o.setQty(Integer.parseInt(teksQty.getText().toString()));
-                    } else {
-                        Order o = new Order();
-                        o.setKode(m.getKode());
-                        o.setNama(m.getNama());
-                        o.setKeterangan(m.getKeterangan());
-                        o.setHarga(m.getHarga());
-                        o.setUom(m.getUom());
-                        o.setWh(m.getWh());
-                        o.setPrintCode(m.getPrintCode());
-                        o.setQty(Integer.parseInt(teksQty.getText().toString()));
-                        orderAdapter.getList().add(o);
-                    }
+                    Order o = new Order();
+                    o.setKode(m.getKode());
+                    o.setNama(m.getNama());
+                    o.setKeterangan(m.getKeterangan());
+                    o.setHarga(m.getHarga());
+                    o.setUom(m.getUom());
+                    o.setWh(m.getWh());
+                    o.setPrintCode(m.getPrintCode());
+                    o.setQty(Integer.parseInt(teksQty.getText().toString()));
+                    orderAdapter.getList().add(o);
                     orderAdapter.notifyDataSetChanged();
+                    teksQty.setText("1");
+                    m.setKeterangan("");
+                    notifyDataSetChanged();
+                    button.setEnabled(true);
                 }
             }
         });
@@ -149,7 +156,7 @@ public class MenuAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 int qty = Integer.parseInt(teksQty.getText().toString());
-                if (qty > 0) {
+                if (qty > 1) {
                     qty--;
                     teksQty.setText(String.valueOf(qty));
                 }
