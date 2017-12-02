@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.mobile.pos.Constant;
 import com.mobile.pos.R;
 import com.mobile.pos.model.Kategori;
 
@@ -45,16 +46,19 @@ public class KategoriAdapter extends BaseAdapter {
         TextView teks = (TextView) convertView.findViewById(R.id.kategori);
         teks.setText(k.getNama());
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
-        String path = "http://192.168.56.1/FBClub/Help/Pictures/" + k.getKode() + ".jpg";
+        String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".jpg";
         File file = new File(path);
         if (!file.exists()) {
-            path = "http://192.168.56.1/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
+            path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
             file = new File(path);
         }
         if (file.exists()) {
             Glide.with(context)
                     .load(path)
                     .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+            teks.setTextColor(context.getResources().getColor(android.R.color.white));
+        } else {
+            teks.setTextColor(context.getResources().getColor(android.R.color.black));
         }
 
         return convertView;

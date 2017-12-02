@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.mobile.pos.Constant;
 import com.mobile.pos.OrderActivity;
 import com.mobile.pos.R;
 import com.mobile.pos.model.Menu;
@@ -63,10 +64,10 @@ public class MenuAdapter extends BaseAdapter {
         TextView teksHarga = (TextView) convertView.findViewById(R.id.harga);
         teksHarga.setText(format.format(m.getHarga()));
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
-        String path = "http://192.168.56.1/FBClub/Help/Pictures/" + m.getKode() + ".jpg";
+        String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".jpg";
         File file = new File(path);
         if (!file.exists()) {
-            path = "http://192.168.56.1/FBClub/Help/Pictures/" + m.getKode() + ".bmp";
+            path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".bmp";
             file = new File(path);
         }
         if (file.exists()) {

@@ -10,14 +10,13 @@
         android:id="@+id/lytThumb"
         android:layout_margin="5dp"
         android:orientation="vertical"
-        android:background="@drawable/shape">
+        android:src="@drawable/shape">
         <ImageView
             android:id="@+id/image"
             android:layout_width="match_parent"
             android:layout_height="96dp"
-            android:background="@drawable/shape"
-            android:scaleType="centerCrop"
-            android:src="#0099FF" />
+            android:background="@drawable/no_image"
+            android:scaleType="centerCrop" />
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
