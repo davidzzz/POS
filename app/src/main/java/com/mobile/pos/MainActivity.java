@@ -38,7 +38,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
-    Button cancel, order;
+    Button cancel, order, kembali;
     ListView listView;
     ExpandableHeightListView listMenu;
     ExpandableHeightGridView gridView;
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         query = new Query();
+        kembali = (Button) findViewById(R.id.kembali);
         cancel = (Button) findViewById(R.id.cancel);
         order = (Button) findViewById(R.id.order);
         kategori = (TextView) findViewById(R.id.kategori);
@@ -100,16 +101,24 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
         });
+        kembali.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                search.setText("");
+                gridView.setVisibility(View.VISIBLE);
+                kembali.setVisibility(View.GONE);
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 query.deleteOrderLock(kodeMeja);
-                listOrder.clear();
-                orderAdapter.notifyDataSetChanged();
-                search.setText("");
-                list.clear();
-                adapter.notifyDataSetChanged();
-                //activeState(true);
+                Intent i = new Intent(MainActivity.this, MejaActivity.class);
+                i.putExtra("userCode", userCode);
+                i.putExtra("username", username);
+                i.putExtra("date", date);
+                startActivity(i);
+                finish();
             }
         });
         order.setOnClickListener(new View.OnClickListener() {
@@ -137,18 +146,25 @@ public class MainActivity extends AppCompatActivity {
                             query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
                         }
                         query.deleteOrderLock(kodeMeja);
-                        listOrder.clear();
-                        orderAdapter.notifyDataSetChanged();
-                        search.setText("");
-                        list.clear();
-                        adapter.notifyDataSetChanged();
+                        Intent intent = new Intent(MainActivity.this, MejaActivity.class);
+                        intent.putExtra("userCode", userCode);
+                        intent.putExtra("username", username);
+                        intent.putExtra("date", date);
+                        startActivity(intent);
+                        finish();
                         Toast.makeText(MainActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
-                        //activeState(true);
                     }
                 });
                 builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        query.deleteOrderLock(kodeMeja);
+                        Intent intent = new Intent(MainActivity.this, MejaActivity.class);
+                        intent.putExtra("userCode", userCode);
+                        intent.putExtra("username", username);
+                        intent.putExtra("date", date);
+                        startActivity(intent);
+                        finish();
                         dialogInterface.cancel();
                     }
                 });
@@ -218,6 +234,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     adapter.notifyDataSetChanged();
+                    if (search.getText().toString().length() > 0) {
+                        gridView.setVisibility(View.GONE);
+                        kembali.setVisibility(View.VISIBLE);
+                    } else {
+                        gridView.setVisibility(View.VISIBLE);
+                        kembali.setVisibility(View.GONE);
+                    }
                 }
             });
         }
