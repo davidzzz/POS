@@ -2,6 +2,8 @@ package com.mobile.pos.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mobile.pos.Constant;
+import com.mobile.pos.MejaActivity;
 import com.mobile.pos.OrderActivity;
 import com.mobile.pos.R;
 import com.mobile.pos.model.Menu;
@@ -124,11 +127,33 @@ public class MenuAdapter extends BaseAdapter {
                     } catch (Exception e) {
                     }
                     if (foodSales >= foodQty) {
-                        Toast.makeText(context, "SOLD OUT", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("PESAN KESALAHAN");
+                        builder.setMessage("SOLD OUT");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
                         cek = false;
                     } else {
                         if (Integer.parseInt(teksQty.getText().toString()) > foodQty - foodSales) {
-                            Toast.makeText(context, "SISA YANG BISA DIORDER " + (foodQty - foodSales), Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("PESAN KESALAHAN");
+                            builder.setMessage("SISA YANG BISA DIORDER " + (foodQty - foodSales));
+                            builder.setCancelable(false);
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
                             cek = false;
                         }
                     }

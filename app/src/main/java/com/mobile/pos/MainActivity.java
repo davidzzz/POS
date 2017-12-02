@@ -1,23 +1,16 @@
 package com.mobile.pos;
 
 import android.app.Dialog;
-import android.app.KeyguardManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +21,6 @@ import com.mobile.pos.adapter.OrderAdapter;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
-import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
 import com.mobile.pos.view.ExpandableHeightGridView;

@@ -2,8 +2,10 @@ package com.mobile.pos;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -70,7 +72,18 @@ public class MejaActivity extends AppCompatActivity {
                 spec = (Spec) nomor.getSelectedItem();
                 if (spec.isKtv()) {
                     if (spec.getStatus().equals("V")) {
-                        Toast.makeText(MejaActivity.this, "KTV wajib dibuka melalui POS", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this);
+                        builder.setTitle("PESAN KESALAHAN");
+                        builder.setMessage("KTV wajib dibuka melalui POS");
+                        builder.setCancelable(false);
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     } else {
                         orderLock();
                     }
@@ -107,10 +120,32 @@ public class MejaActivity extends AppCompatActivity {
                 query.closeConnection();
                 startActivity(i);
             } else {
-                Toast.makeText(this, "Terjadi kesalahan saat melakukan konfirmasi", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this);
+                builder.setTitle("PESAN KESALAHAN");
+                builder.setMessage("Terjadi kesalahan saat melakukan konfirmasi");
+                builder.setCancelable(false);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         } else if (status == 0) {
-            Toast.makeText(this, "Unit sedang diorder oleh user lain", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this);
+            builder.setTitle("PESAN KESALAHAN");
+            builder.setMessage("Unit sedang diorder oleh user lain");
+            builder.setCancelable(false);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
 
