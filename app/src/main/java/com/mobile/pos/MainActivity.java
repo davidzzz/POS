@@ -1,5 +1,6 @@
 package com.mobile.pos;
 
+import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.pos.adapter.ConfirmAdapter;
 import com.mobile.pos.adapter.KategoriAdapter;
 import com.mobile.pos.adapter.MenuAdapter;
 import com.mobile.pos.adapter.OrderAdapter;
@@ -124,25 +126,40 @@ public class MainActivity extends AppCompatActivity {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String teks = "";
                 DecimalFormat format = new DecimalFormat();
                 float total = 0;
                 for (int j = 0; j < listOrder.size(); j++) {
                     Order o = listOrder.get(j);
                     total += o.getQty() * o.getHarga();
-                    teks += o.getQty() + " " + o.getNama() + " @ Rp." + format.format(o.getHarga()) + "\n";
                 }
-                teks += "Total = Rp." + format.format(total);
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("KONFIRMASI PESANAN");
-                builder.setMessage("Apakah pesanan ini sudah benar?\n" + teks);
-                builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                final Dialog dialog = new Dialog(MainActivity.this);
+                dialog.setTitle("KONFIRMASI ORDERAN");
+                dialog.setContentView(R.layout.confirm_order);
+                ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
+                TextView teksTotal = (TextView) dialog.findViewById(R.id.total);
+                TextView teksTotalItem = (TextView) dialog.findViewById(R.id.totalitem);
+                ConfirmAdapter confirmAdapter = new ConfirmAdapter(MainActivity.this, listOrder);
+                listConfirm.setAdapter(confirmAdapter);
+                teksTotal.setText(format.format(total));
+                teksTotalItem.setText(listOrder.size() + "");
+                Button cancel = (Button) dialog.findViewById(R.id.cancel);
+                Button ok = (Button) dialog.findViewById(R.id.ok);
+                cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        query.insertSellMaster(kodeMeja, userCode);
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        search.setText("");
+                        gridView.setVisibility(View.VISIBLE);
+                        kembali.setVisibility(View.GONE);
+                    }
+                });
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        query.insertSellMaster(kodeMeja, userCode, date);
                         for (int j = 0; j < listOrder.size(); j++) {
                             Order o = listOrder.get(j);
-                            query.insertSellDetail(kodeMeja, userCode, o);
+                            query.insertSellDetail(kodeMeja, userCode, date, o);
                             query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
                         }
                         query.deleteOrderLock(kodeMeja);
@@ -155,21 +172,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                     }
                 });
-                builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        query.deleteOrderLock(kodeMeja);
-                        Intent intent = new Intent(MainActivity.this, MejaActivity.class);
-                        intent.putExtra("userCode", userCode);
-                        intent.putExtra("username", username);
-                        intent.putExtra("date", date);
-                        startActivity(intent);
-                        finish();
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+                dialog.show();
             }
         });
         getKategori();

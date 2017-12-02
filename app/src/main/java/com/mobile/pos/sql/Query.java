@@ -279,10 +279,9 @@ public class Query {
         return String.valueOf(n);
     }
 
-    public void insertSellMaster(String kode, String kodeUser){
+    public void insertSellMaster(String kode, String kodeUser, String date){
         try {
             Calendar c = Calendar.getInstance();
-            String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
             String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
             String year = String.valueOf(c.get(Calendar.YEAR));
             String teks = kode + "-" + getFormatString(findEmptyStatus(kode));
@@ -294,7 +293,7 @@ public class Query {
             stmt.setString(2, teks);
             stmt.setString(3, "POS");
             stmt.setString(4, "CASH");
-            stmt.setString(5, day + "-" + month + "-" + year);
+            stmt.setString(5, date);
             stmt.setString(6, "");
             stmt.setString(7, kodeUser);
             stmt.setString(8, year + month);
@@ -304,7 +303,7 @@ public class Query {
         }
     }
 
-    public void insertSellDetail(String kode, String kodeUser, Order o){
+    public void insertSellDetail(String kode, String kodeUser, String date, Order o){
         try {
             Calendar c = Calendar.getInstance();
             String day = (c.get(Calendar.DAY_OF_MONTH) < 10 ? "0" : "") + c.get(Calendar.DAY_OF_MONTH);
@@ -337,7 +336,7 @@ public class Query {
             stmt.setFloat(15, 0);
             stmt.setString(16, kodeUser);
             stmt.setString(17, "1");
-            stmt.setString(18, day + "-" + month + "-" + year);
+            stmt.setString(18, date);
             stmt.setString(19, hour + ":" + minute);
             stmt.setString(20, "");
             stmt.setString(21, "");

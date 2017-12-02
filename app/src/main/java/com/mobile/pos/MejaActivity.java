@@ -54,7 +54,9 @@ public class MejaActivity extends AppCompatActivity {
         newtimer = new CountDownTimer(1000000000, 1000) {
             public void onTick(long millisUntilFinished) {
                 Calendar c = Calendar.getInstance();
-                footer.setText(username + ", " + date + " " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE));
+                String hour = (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY);
+                String minute = (c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
+                footer.setText(username + ", " + date + " " + hour + ":" + minute);
             }
             public void onFinish() {
 

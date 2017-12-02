@@ -63,8 +63,8 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:id="@+id/min"
             android:text="-"
             android:background="#CCCCCC"
@@ -74,10 +74,11 @@
             android:layout_height="wrap_content"
             android:id="@+id/qty"
             android:textSize="14sp"
+            android:padding="5dp"
             android:text="0"/>
         <Button
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:id="@+id/pos"
             android:text="+"
             android:background="#FF9933"

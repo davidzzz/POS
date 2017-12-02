@@ -1,5 +1,6 @@
 package com.mobile.pos;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.pos.adapter.ConfirmAdapter;
 import com.mobile.pos.adapter.MenuAdapter;
 import com.mobile.pos.adapter.OrderAdapter;
 import com.mobile.pos.model.Menu;
@@ -71,51 +73,64 @@ public class OrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 query.deleteOrderLock(kodeMeja);
-                listOrder.clear();
-                orderAdapter.notifyDataSetChanged();
-                setResult(1, getIntent().putParcelableArrayListExtra("orderArray", listOrder));
-                setResult(1, getIntent().putExtra("reset", true));
+                Intent i = new Intent(OrderActivity.this, MejaActivity.class);
+                i.putExtra("userCode", userCode);
+                i.putExtra("username", username);
+                i.putExtra("date", date);
+                startActivity(i);
                 finish();
             }
         });
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String teks = "";
                 DecimalFormat format = new DecimalFormat();
                 float total = 0;
                 for (int j = 0; j < listOrder.size(); j++) {
                     Order o = listOrder.get(j);
                     total += o.getQty() * o.getHarga();
-                    teks += o.getQty() + " " + o.getNama() + " @ Rp." + format.format(o.getHarga()) + "\n";
                 }
-                teks += "Total = Rp." + format.format(total);
-                AlertDialog.Builder builder = new AlertDialog.Builder(OrderActivity.this);
-                builder.setTitle("KONFIRMASI PESANAN");
-                builder.setMessage("Apakah pesanan sudah benar?\n" + teks);
-                builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                final Dialog dialog = new Dialog(OrderActivity.this);
+                dialog.setTitle("KONFIRMASI ORDERAN");
+                dialog.setContentView(R.layout.confirm_order);
+                ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
+                TextView teksTotal = (TextView) dialog.findViewById(R.id.total);
+                TextView teksTotalItem = (TextView) dialog.findViewById(R.id.totalitem);
+                ConfirmAdapter confirmAdapter = new ConfirmAdapter(OrderActivity.this, listOrder);
+                listConfirm.setAdapter(confirmAdapter);
+                teksTotal.setText(format.format(total));
+                teksTotalItem.setText(listOrder.size() + "");
+                Button cancel = (Button) dialog.findViewById(R.id.cancel);
+                Button ok = (Button) dialog.findViewById(R.id.ok);
+                cancel.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        query.insertSellMaster(kodeMeja, userCode);
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        query.closeConnection();
+                        setResult(1, getIntent().putParcelableArrayListExtra("orderArray", listOrder));
+                        finish();
+                    }
+                });
+                ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        query.insertSellMaster(kodeMeja, userCode, date);
                         for (int j = 0; j < listOrder.size(); j++) {
                             Order o = listOrder.get(j);
-                            query.insertSellDetail(kodeMeja, userCode, o);
+                            query.insertSellDetail(kodeMeja, userCode, date, o);
                             query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
                         }
                         query.deleteOrderLock(kodeMeja);
-                        listOrder.clear();
-                        orderAdapter.notifyDataSetChanged();
+                        Intent intent = new Intent(OrderActivity.this, MejaActivity.class);
+                        intent.putExtra("userCode", userCode);
+                        intent.putExtra("username", username);
+                        intent.putExtra("date", date);
+                        startActivity(intent);
+                        finish();
                         Toast.makeText(OrderActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                     }
                 });
-                builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+                dialog.show();
             }
         });
         orderAdapter = new OrderAdapter(this, listOrder, order);
