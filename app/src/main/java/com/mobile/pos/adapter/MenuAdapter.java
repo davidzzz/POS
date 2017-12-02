@@ -12,13 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mobile.pos.Constant;
-import com.mobile.pos.MejaActivity;
-import com.mobile.pos.OrderActivity;
 import com.mobile.pos.R;
 import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;

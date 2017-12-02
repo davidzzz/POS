@@ -111,6 +111,7 @@
                 android:layout_height="150dp"
                 android:id="@+id/listView"
                 android:background="#ffffcc"
+                android:focusable="false"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"/>
@@ -137,12 +138,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/listMenu"
+                android:focusable="false"
                 android:layout_margin="5dp"/>
             <com.mobile.pos.view.ExpandableHeightGridView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/gridView"
                 android:numColumns="3"
+                android:focusable="false"
                 android:layout_margin="5dp"/>
         </LinearLayout>
     </ScrollView>
