@@ -68,8 +68,10 @@
                     android:layout_height="25dp"
                     android:id="@+id/kembali"
                     android:layout_margin="5dp"
-                    android:background="@drawable/add_selector"
-                    android:text="KEMBALI"/>
+                    android:background="@drawable/button_green"
+                    android:text="KEMBALI"
+                    android:textColor="@color/colorWhite"
+                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,7 +128,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:background="#FF9933">
+        android:background="#ff9934">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -134,33 +136,41 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="www.tssoft.co.id"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="08-1163-1168"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end">
+
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:text="Cancel All"
                 android:id="@+id/cancel"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:background="@drawable/bg_red"/>
-            <Button
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:text="Confirm Order"
-                android:enabled="false"
+                android:layout_height="32dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/button_red"
+                android:padding="6dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorWhite"
+                android:text="Cancel All" />
+
+            <Button
                 android:id="@+id/order"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:background="@drawable/add_selector"/>
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_margin="6dp"
+                android:background="@drawable/button_green"
+                android:enabled="false"
+                android:padding="6dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorWhite"
+                android:text="Confirm Order" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
