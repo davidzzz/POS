@@ -190,15 +190,18 @@
                     android:text="0"
                     android:background="@drawable/circle"
                     android:id="@+id/nol"/>
+
                 <Button
+                    android:id="@+id/delete"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="35dp"
                     android:layout_margin="10dp"
-                    android:textSize="15sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_bg_gmail"
                     android:gravity="center"
                     android:text="DELETE"
-                    android:id="@+id/delete"/>
+                    android:textColor="@color/colorWhite"
+                    android:textSize="13sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -209,17 +212,21 @@
         android:gravity="bottom"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:background="#3036FF">
+        android:background="#ff9934">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="www.tssoft.co.id"/>
+            android:text="www.tssoft.co.id"
+            android:textColor="@color/colorWhite"
+            />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
             android:paddingRight="10dp"
-            android:text="08-1163-1168"/>
+            android:text="08-1163-1168"
+            android:textColor="@color/colorWhite"
+            />
     </LinearLayout>
 </LinearLayout>

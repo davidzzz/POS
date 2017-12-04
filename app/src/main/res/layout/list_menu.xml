@@ -52,7 +52,8 @@
                 android:layout_height="25dp"
                 android:id="@+id/order"
                 android:text="Order"
-                android:background="#FF9933"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_order"
                 android:focusable="false"/>
         </LinearLayout>
     </LinearLayout>
@@ -67,7 +68,7 @@
             android:layout_height="30dp"
             android:id="@+id/min"
             android:text="-"
-            android:background="#CCCCCC"
+            android:background="@drawable/button_min"
             android:focusable="false"/>
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +82,7 @@
             android:layout_height="30dp"
             android:id="@+id/pos"
             android:text="+"
-            android:background="#FF9933"
+            android:background="@drawable/button_plus"
             android:focusable="false"/>
     </LinearLayout>
 
