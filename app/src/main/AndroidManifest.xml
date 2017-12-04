@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobile.pos">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +24,9 @@
         <activity android:name=".OrderActivity" android:windowSoftInputMode="adjustPan" />
         <activity android:name=".LoginAdminActivity" android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SettingActivity" android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".MejaActivity"></activity>
+        <activity android:name=".MejaActivity">
+
+        </activity>
     </application>
 
 </manifest>
