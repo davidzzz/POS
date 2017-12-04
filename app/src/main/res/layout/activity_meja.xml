@@ -62,7 +62,9 @@
                 android:id="@+id/confirm"
                 android:padding="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/add_selector"
+                android:background="@drawable/button_green"
+                android:textColor="@color/colorWhite"
+                android:textSize="12sp"
                 android:text="CONFIRM UNIT"/>
             <Button
                 android:layout_width="120dp"
@@ -70,6 +72,8 @@
                 android:id="@+id/billing"
                 android:padding="5dp"
                 android:layout_marginTop="5dp"
+                android:background="@drawable/button_order"
+                android:textColor="@color/colorWhite"
                 android:text="BILLING"/>
         </LinearLayout>
     </LinearLayout>
@@ -86,10 +90,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="www.tssoft.co.id"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="08-1163-1168"/>
         </LinearLayout>
         <TextView

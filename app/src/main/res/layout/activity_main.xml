@@ -154,7 +154,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="5dp"
-        android:background="#FF9933">
+        android:background="#ff9934">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -162,10 +162,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="www.tssoft.co.id"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
                 android:text="08-1163-1168"/>
         </LinearLayout>
         <LinearLayout
@@ -174,21 +176,25 @@
             android:gravity="end">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="32dp"
                 android:text="Cancel All"
                 android:id="@+id/cancel"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:background="@drawable/bg_red"/>
+                android:layout_margin="6dp"
+                android:padding="6dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_red"/>
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_height="32dp"
                 android:text="Confirm Order"
                 android:enabled="false"
                 android:id="@+id/order"
-                android:layout_margin="5dp"
-                android:padding="5dp"
-                android:background="@drawable/add_selector"/>
+                android:layout_margin="6dp"
+                android:padding="6dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_green"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
