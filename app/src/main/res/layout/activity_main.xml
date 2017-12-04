@@ -162,12 +162,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:text="www.tssoft.co.id"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:text="08-1163-1168"/>
         </LinearLayout>
         <LinearLayout
@@ -182,7 +182,7 @@
                 android:layout_margin="6dp"
                 android:padding="6dp"
                 android:textSize="12sp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:background="@drawable/button_red"/>
             <Button
                 android:layout_width="wrap_content"
@@ -193,7 +193,7 @@
                 android:layout_margin="6dp"
                 android:padding="6dp"
                 android:textSize="12sp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:background="@drawable/button_green"/>
         </LinearLayout>
     </LinearLayout>

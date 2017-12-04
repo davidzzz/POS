@@ -70,7 +70,7 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/button_green"
                     android:text="KEMBALI"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorAccent"
                     />
             </LinearLayout>
             <LinearLayout
@@ -136,12 +136,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:text="www.tssoft.co.id"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:text="08-1163-1168"/>
         </LinearLayout>
         <LinearLayout
@@ -157,7 +157,7 @@
                 android:background="@drawable/button_red"
                 android:padding="6dp"
                 android:textSize="12sp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:text="Cancel All" />
 
             <Button
@@ -169,7 +169,7 @@
                 android:enabled="false"
                 android:padding="6dp"
                 android:textSize="12sp"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:text="Confirm Order" />
         </LinearLayout>
     </LinearLayout>

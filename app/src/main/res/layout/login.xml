@@ -200,7 +200,7 @@
                     android:background="@drawable/button_blue"
                     android:gravity="center"
                     android:text="DELETE"
-                    android:textColor="@color/colorWhite"
+                    android:textColor="@color/colorAccent"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -218,7 +218,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:text="www.tssoft.co.id"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorAccent"
             />
         <TextView
             android:layout_width="match_parent"
@@ -226,7 +226,7 @@
             android:gravity="end"
             android:paddingRight="10dp"
             android:text="08-1163-1168"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorAccent"
             />
     </LinearLayout>
 </LinearLayout>

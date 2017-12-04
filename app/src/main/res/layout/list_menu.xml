@@ -52,7 +52,7 @@
                 android:layout_height="25dp"
                 android:id="@+id/order"
                 android:text="Order"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorAccent"
                 android:background="@drawable/button_order"
                 android:focusable="false"/>
         </LinearLayout>
