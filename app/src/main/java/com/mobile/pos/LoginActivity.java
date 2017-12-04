@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.pos.sql.ConnectionConfig;
@@ -27,9 +28,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class LoginActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private UserLoginTask mAuthTask = null;
-    private EditText mEmailView;
     private EditText mPasswordView;
 
     @Override
@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         Constant.ip = getPrefs.getString("ip", Constant.ip);
         Constant.username = getPrefs.getString("username", Constant.username);
         Constant.password = getPrefs.getString("password", Constant.password);
-        mEmailView = (EditText) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,6 +59,70 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                 attemptLogin();
             }
         });
+
+        TextView tv1 = (TextView) findViewById(R.id.satu);
+        tv1.setOnClickListener(this);
+        TextView tv2 = (TextView) findViewById(R.id.dua);
+        tv2.setOnClickListener(this);
+        TextView tv3 = (TextView) findViewById(R.id.tiga);
+        tv3.setOnClickListener(this);
+        TextView tv4 = (TextView) findViewById(R.id.empat);
+        tv4.setOnClickListener(this);
+        TextView tv5 = (TextView) findViewById(R.id.lima);
+        tv5.setOnClickListener(this);
+        TextView tv6 = (TextView) findViewById(R.id.enam);
+        tv6.setOnClickListener(this);
+        TextView tv7 = (TextView) findViewById(R.id.tujuh);
+        tv7.setOnClickListener(this);
+        TextView tv8 = (TextView) findViewById(R.id.delapan);
+        tv8.setOnClickListener(this);
+        TextView tv9 = (TextView) findViewById(R.id.sembilan);
+        tv9.setOnClickListener(this);
+        TextView tv0 = (TextView) findViewById(R.id.nol);
+        tv0.setOnClickListener(this);
+        Button delete = (Button) findViewById(R.id.delete);
+        delete.setOnClickListener(this);
+    }
+
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.satu:
+                mPasswordView.setText(mPasswordView.getText() + "1");
+                break;
+            case R.id.dua:
+                mPasswordView.setText(mPasswordView.getText() + "2");
+                break;
+            case R.id.tiga:
+                mPasswordView.setText(mPasswordView.getText() + "3");
+                break;
+            case R.id.empat:
+                mPasswordView.setText(mPasswordView.getText() + "4");
+                break;
+            case R.id.lima:
+                mPasswordView.setText(mPasswordView.getText() + "5");
+                break;
+            case R.id.enam:
+                mPasswordView.setText(mPasswordView.getText() + "6");
+                break;
+            case R.id.tujuh:
+                mPasswordView.setText(mPasswordView.getText() + "7");
+                break;
+            case R.id.delapan:
+                mPasswordView.setText(mPasswordView.getText() + "8");
+                break;
+            case R.id.sembilan:
+                mPasswordView.setText(mPasswordView.getText() + "9");
+                break;
+            case R.id.nol:
+                mPasswordView.setText(mPasswordView.getText() + "0");
+                break;
+            case R.id.delete:
+                String pass = mPasswordView.getText().toString();
+                mPasswordView.setText(pass.substring(0, pass.length() - 1));
+                break;
+            default:
+                break;
+        }
     }
 
     private void attemptLogin() {
@@ -68,11 +131,9 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
         }
 
         // Reset errors.
-        mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -85,19 +146,12 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        }
-
         if (cancel) {
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -107,12 +161,10 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
     }
 
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-        private final String mUser;
         private final String mPassword;
-        private String z, username, date;
+        private String z, userCode, username, date;
 
-        UserLoginTask(String user, String password) {
-            mUser = user;
+        UserLoginTask(String password) {
             mPassword = password;
         }
 
@@ -131,7 +183,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                         temp = temp + Integer.toString((int)pass.charAt(i), 16);
                     }
                     pass = temp.trim();
-                    String query = "select * from User_Pass where User_Code='" + mUser + "' and Password2='" + pass + "'";
+                    String query = "select * from User_Pass where Password2='" + pass + "'";
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
 
@@ -139,6 +191,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
                         z = "Password Salah";
                         return false;
                     }
+                    userCode = rs.getString("User_Code");
                     username = rs.getString("User_Name");
                     query = "select PublicDate from PublicDate";
                     stmt = con.createStatement();
@@ -160,7 +213,7 @@ public class LoginActivity extends AppCompatActivity implements NavigationView.O
             mAuthTask = null;
             if (success) {
                 Intent i = new Intent(LoginActivity.this, MejaActivity.class);
-                i.putExtra("userCode", mUser);
+                i.putExtra("userCode", userCode);
                 i.putExtra("username", username);
                 i.putExtra("date", date);
                 startActivity(i);

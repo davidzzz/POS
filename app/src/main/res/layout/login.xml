@@ -40,6 +40,8 @@
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -47,50 +49,157 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Login"
-                    android:textColor="@android:color/black" />
-
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Password"
-                    android:textColor="@android:color/black" />
-
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
+                    android:enabled="false"
                     android:inputType="textPassword" />
-            </LinearLayout>
 
-            <Button
-                android:id="@+id/email_sign_in_button"
-                android:layout_width="117dp"
-                android:layout_height="41dp"
-                android:layout_gravity="end"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/btn_login"
-                android:textStyle="bold" />
+                <Button
+                    android:id="@+id/email_sign_in_button"
+                    android:layout_width="117dp"
+                    android:layout_height="41dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/btn_login"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:background="@drawable/circle"
+                    android:id="@+id/satu"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="2"
+                    android:background="@drawable/circle"
+                    android:id="@+id/dua"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="3"
+                    android:background="@drawable/circle"
+                    android:id="@+id/tiga"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="4"
+                    android:background="@drawable/circle"
+                    android:id="@+id/empat"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="5"
+                    android:background="@drawable/circle"
+                    android:id="@+id/lima"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="6"
+                    android:background="@drawable/circle"
+                    android:id="@+id/enam"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="7"
+                    android:background="@drawable/circle"
+                    android:id="@+id/tujuh"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="8"
+                    android:background="@drawable/circle"
+                    android:id="@+id/delapan"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="9"
+                    android:background="@drawable/circle"
+                    android:id="@+id/sembilan"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:background="@drawable/circle"
+                    android:id="@+id/nol"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:text="DELETE"
+                    android:id="@+id/delete"/>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
