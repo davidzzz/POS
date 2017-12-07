@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.mobile.pos.model.Order;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
 import com.mobile.pos.view.ExpandableHeightListView;
+import com.mobile.pos.view.OnSwipeTouchListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class OrderActivity extends AppCompatActivity {
     OrderAdapter orderAdapter;
     MenuAdapter adapter;
     ControlApplication app;
+    int pos = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +135,31 @@ public class OrderActivity extends AppCompatActivity {
         });
         orderAdapter = new OrderAdapter(this, listOrder, order);
         listView.setAdapter(orderAdapter);
-        listView.setEnabled(false);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                final Button delete = (Button) view.findViewById(R.id.delete);
+                for (int j = 0; j < listOrder.size(); j++) {
+                    View v = orderAdapter.getView(j, null, null);
+                    Button del = (Button) v.findViewById(R.id.delete);
+                    del.setVisibility(View.GONE);
+                }
+                pos = -1;
+                view.setOnTouchListener(new OnSwipeTouchListener(OrderActivity.this) {
+                    public void onSwipeLeft() {
+                        if (pos != -1) {
+                            for (int i = 0; i < listOrder.size(); i++) {
+                                View v = orderAdapter.getView(i, null, null);
+                                Button delete = (Button) v.findViewById(R.id.delete);
+                                delete.setVisibility(View.GONE);
+                            }
+                        }
+                        pos = i;
+                        delete.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
         adapter = new MenuAdapter(this, list, date, orderAdapter, query, order);
         listMenu.setAdapter(adapter);
         listMenu.setExpanded(true);

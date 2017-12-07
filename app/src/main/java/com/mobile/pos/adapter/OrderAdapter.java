@@ -86,7 +86,7 @@ public class OrderAdapter extends BaseAdapter {
                 alert.show();
             }
         });
-        convertView.setOnTouchListener(new OnSwipeTouchListener(context) {
+        /*convertView.setOnTouchListener(new OnSwipeTouchListener(context) {
             public void onSwipeRight() {
                 delete.setVisibility(View.GONE);
             }
@@ -94,7 +94,7 @@ public class OrderAdapter extends BaseAdapter {
             public void onSwipeLeft() {
                 delete.setVisibility(View.VISIBLE);
             }
-        });
+        });*/
 
         return convertView;
     }
