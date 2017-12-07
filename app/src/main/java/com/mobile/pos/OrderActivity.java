@@ -171,12 +171,13 @@ public class OrderActivity extends AppCompatActivity {
         super.onUserInteraction();
         app = new ControlApplication();
         app.touch();
-        Timer timer2 = new Timer();
+        final Timer timer2 = new Timer();
         timer2.scheduleAtFixedRate(
                 new TimerTask() {
                     @Override
                     public void run() {
                         if (app.isStop()) {
+                            timer2.cancel();
                             Intent i = new Intent(OrderActivity.this, LoginActivity.class);
                             startActivity(i);
                             finish();

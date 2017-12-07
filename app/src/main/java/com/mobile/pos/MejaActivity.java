@@ -214,7 +214,7 @@ public class MejaActivity extends AppCompatActivity {
         super.onUserInteraction();
         app = new ControlApplication();
         app.touch();
-        Timer timer2 = new Timer();
+        final Timer timer2 = new Timer();
         timer2.scheduleAtFixedRate(
                 new TimerTask() {
                     @Override
@@ -222,6 +222,7 @@ public class MejaActivity extends AppCompatActivity {
                         KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
                         if (myKM.inKeyguardRestrictedInputMode() || app.isStop()) {
                             newtimer.cancel();
+                            timer2.cancel();
                             Intent i = new Intent(MejaActivity.this, LoginActivity.class);
                             startActivity(i);
                             finish();
