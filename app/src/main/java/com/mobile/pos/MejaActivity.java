@@ -32,7 +32,7 @@ import java.util.TimerTask;
 
 public class MejaActivity extends AppCompatActivity {
     Query query;
-    Button confirm, billing;
+    Button confirm, billing, logout;
     Spinner kategori, nomor;
     TextView footer;
     Spec spec;
@@ -51,6 +51,7 @@ public class MejaActivity extends AppCompatActivity {
         query = new Query();
         confirm = (Button) findViewById(R.id.confirm);
         billing = (Button) findViewById(R.id.billing);
+        logout = (Button) findViewById(R.id.logout);
         kategori = (Spinner) findViewById(R.id.kategori);
         nomor = (Spinner) findViewById(R.id.nomor);
         footer = (TextView) findViewById(R.id.footer);
@@ -111,6 +112,14 @@ public class MejaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // to be continued
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MejaActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
             }
         });
         getKategoriMeja();
