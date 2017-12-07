@@ -118,7 +118,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.delete:
                 String pass = mPasswordView.getText().toString();
-                mPasswordView.setText(pass.substring(0, pass.length() - 1));
+                if (pass.length() > 0) {
+                    mPasswordView.setText(pass.substring(0, pass.length() - 1));
+                }
                 break;
             default:
                 break;
