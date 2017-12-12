@@ -270,15 +270,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (query.isCloseConnection()) {
-            query = new Query();
-        }
+
+        //if (query.isCloseConnection()) {
+        //    query = new Query();
+        //}
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        timer.cancel();
+        //super.onDestroy();
+       // timer.cancel();
     }
 
     @Override
@@ -291,19 +292,19 @@ public class MainActivity extends AppCompatActivity {
         super.onUserInteraction();
         app = new ControlApplication();
         app.touch();
-        final Timer timer2 = new Timer();
-        timer2.scheduleAtFixedRate(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (app.isStop()) {
-                            timer2.cancel();
-                            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }
-                }, 0, 5000
-        );
+       // final Timer timer2 = new Timer();
+        //timer2.scheduleAtFixedRate(
+               // new TimerTask() {
+                    //@Override
+                   // public void run() {
+                       // if (app.isStop()) {
+                         //   timer2.cancel();
+                         //   Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                         //   startActivity(i);
+                         //   finish();
+                     //   }
+             //       }
+              //  }, 0, 5000
+       // );
     }
 }

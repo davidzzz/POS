@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Constant.username = getPrefs.getString("username", Constant.username);
         Constant.password = getPrefs.getString("password", Constant.password);
         mPasswordView = (EditText) findViewById(R.id.password);
+        EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -52,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        TextView mEmailSignInButton = (TextView) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tv9.setOnClickListener(this);
         TextView tv0 = (TextView) findViewById(R.id.nol);
         tv0.setOnClickListener(this);
-        Button delete = (Button) findViewById(R.id.delete);
+        TextView delete = (TextView) findViewById(R.id.delete);
         delete.setOnClickListener(this);
     }
 
@@ -248,7 +251,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }

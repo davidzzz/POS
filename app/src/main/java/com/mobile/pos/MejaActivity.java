@@ -96,6 +96,7 @@ public class MejaActivity extends AppCompatActivity {
                             }
                         });
                         AlertDialog alert = builder.create();
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.black));
                         alert.show();
                     } else {
                         orderLock();
@@ -145,7 +146,9 @@ public class MejaActivity extends AppCompatActivity {
                 builder.setTitle("PESAN KESALAHAN");
                 builder.setMessage("Terjadi kesalahan saat melakukan konfirmasi");
                 builder.setCancelable(false);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(
+
+                        "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -199,9 +202,9 @@ public class MejaActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (query.isCloseConnection()) {
-            query = new Query();
-        }
+        //if (query.isCloseConnection()) {
+         //   query = new Query();
+        //}
     }
 
     @Override
@@ -214,21 +217,6 @@ public class MejaActivity extends AppCompatActivity {
         super.onUserInteraction();
         app = new ControlApplication();
         app.touch();
-        final Timer timer2 = new Timer();
-        timer2.scheduleAtFixedRate(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                        if (myKM.inKeyguardRestrictedInputMode() || app.isStop()) {
-                            newtimer.cancel();
-                            timer2.cancel();
-                            Intent i = new Intent(MejaActivity.this, LoginActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }
-                }, 0, 5000
-        );
+
     }
 }

@@ -30,7 +30,7 @@ public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
     TextView kategori, nomor;
     ListView listView;
-    ExpandableHeightListView listMenu;
+    ListView listMenu;
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
@@ -51,7 +51,7 @@ public class OrderActivity extends AppCompatActivity {
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
         listView = (ListView) findViewById(R.id.listView);
-        listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
+        listMenu = (ListView) findViewById(R.id.listMenu);
         kategoriMeja = getIntent().getStringExtra("kategoriMeja");
         kodeMeja = getIntent().getStringExtra("kodeMeja");
         kode = getIntent().getStringExtra("kode");
@@ -162,7 +162,7 @@ public class OrderActivity extends AppCompatActivity {
         });
         adapter = new MenuAdapter(this, list, date, orderAdapter, query, order);
         listMenu.setAdapter(adapter);
-        listMenu.setExpanded(true);
+
         listMenu.setEnabled(false);
         daftarMenu();
     }
@@ -198,19 +198,19 @@ public class OrderActivity extends AppCompatActivity {
         super.onUserInteraction();
         app = new ControlApplication();
         app.touch();
-        final Timer timer2 = new Timer();
-        timer2.scheduleAtFixedRate(
-                new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (app.isStop()) {
-                            timer2.cancel();
-                            Intent i = new Intent(OrderActivity.this, LoginActivity.class);
-                            startActivity(i);
-                            finish();
-                        }
-                    }
-                }, 0, 5000
-        );
+        //final Timer timer2 = new Timer();
+        //timer2.scheduleAtFixedRate(
+        //        new TimerTask() {
+        //            @Override
+         //           public void run() {
+         //               if (app.isStop()) {
+          //                  timer2.cancel();
+          //                  Intent i = new Intent(OrderActivity.this, LoginActivity.class);
+          //                  startActivity(i);
+          //                  finish();
+          //              }
+           //         }
+          //      }, 0, 5000
+       // );
     }
 }
