@@ -105,12 +105,12 @@
                 android:layout_height="32dp"
                 android:layout_margin="6dp"
                 android:background="@drawable/button_red"
-                android:enabled="false"
+
                 android:padding="6dp"
-                android:textSize="12sp"
-                android:textStyle="bold"
+                android:text="Cancel"
                 android:textColor="#fcfbfb"
-                android:text="Cancel" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
 
 

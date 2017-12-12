@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_marginLeft="5dp"
+    android:layout_margin="7dp">
 
     <TextView
         android:layout_width="0dp"
