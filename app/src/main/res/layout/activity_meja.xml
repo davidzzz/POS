@@ -55,7 +55,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="95dp"
+            android:layout_height="195dp"
             android:gravity="end"
             android:orientation="vertical">
 
@@ -74,7 +74,7 @@
                 android:id="@+id/billing"
                 android:layout_width="120dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="45dp"
                 android:background="@drawable/button_order"
                 android:padding="5dp"
                 android:text="BILLING"
