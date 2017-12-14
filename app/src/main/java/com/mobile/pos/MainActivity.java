@@ -1,12 +1,14 @@
 package com.mobile.pos;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,7 @@ import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
+import com.mobile.pos.util.HomeKeyLocker;
 import com.mobile.pos.view.ExpandableHeightGridView;
 import com.mobile.pos.view.ExpandableHeightListView;
 import com.mobile.pos.view.OnSwipeTouchListener;
@@ -47,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     Query query;
     String userCode, username, kategoriMeja, kodeMeja, date;
     Timer timer = new Timer();
-    ControlApplication app;
     int pos = -1;
 
     @Override
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         query = new Query();
+        HomeKeyLocker hkl = new HomeKeyLocker();
+        hkl.lock(this);
         kembali = (Button) findViewById(R.id.kembali);
         cancel = (Button) findViewById(R.id.cancel);
         order = (Button) findViewById(R.id.order);
@@ -101,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 search.setText("");
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
                 gridView.setVisibility(View.VISIBLE);
                 kembali.setVisibility(View.GONE);
             }
@@ -143,6 +149,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         dialog.dismiss();
                         search.setText("");
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
                         gridView.setVisibility(View.VISIBLE);
                         kembali.setVisibility(View.GONE);
                     }
@@ -271,40 +279,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //if (query.isCloseConnection()) {
-        //    query = new Query();
-        //}
+        if (query.isCloseConnection()) {
+            query = new Query();
+        }
     }
 
     @Override
     protected void onDestroy() {
-        //super.onDestroy();
-       // timer.cancel();
+        super.onDestroy();
+        timer.cancel();
     }
 
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    public void onUserInteraction()
-    {
-        super.onUserInteraction();
-        app = new ControlApplication();
-        app.touch();
-       // final Timer timer2 = new Timer();
-        //timer2.scheduleAtFixedRate(
-               // new TimerTask() {
-                    //@Override
-                   // public void run() {
-                       // if (app.isStop()) {
-                         //   timer2.cancel();
-                         //   Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                         //   startActivity(i);
-                         //   finish();
-                     //   }
-             //       }
-              //  }, 0, 5000
-       // );
     }
 }

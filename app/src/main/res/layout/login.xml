@@ -55,12 +55,10 @@
                     android:layout_height="39dp"
                     android:layout_weight="2"
                     android:drawableTint="#404aff"
-                    android:textSize="16dp"
+                    android:textSize="18sp"
                     android:enabled="false"
                     android:hint="Password"
-                    android:inputType="textPassword"
-
-                    android:singleLine="true" />
+                    android:inputType="textPassword"/>
 
                 <TextView
                     android:id="@+id/email_sign_in_button"

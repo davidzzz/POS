@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,10 +20,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.dubu.lockscreenusingservice.Lockscreen;
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Spec;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
+import com.mobile.pos.util.HomeKeyLocker;
+import com.mobile.pos.util.HomeWatcher;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,7 +45,6 @@ public class MejaActivity extends AppCompatActivity {
     ArrayList<Spec> listSpec = new ArrayList<>();
     ArrayAdapter<Kategori> adapter1;
     ArrayAdapter<Spec> adapter2;
-    ControlApplication app;
     CountDownTimer newtimer;
 
     @Override
@@ -49,6 +52,20 @@ public class MejaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meja);
         query = new Query();
+        Lockscreen.getInstance(this).startLockscreenService();
+        //HomeKeyLocker hkl = new HomeKeyLocker();
+        //hkl.lock(this);
+        /*HomeWatcher mHomeWatcher = new HomeWatcher(this);
+        mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                onBackPressed();
+            }
+            @Override
+            public void onHomeLongPressed() {
+            }
+        });
+        mHomeWatcher.startWatch();*/
         confirm = (Button) findViewById(R.id.confirm);
         billing = (Button) findViewById(R.id.billing);
         logout = (Button) findViewById(R.id.logout);
@@ -96,7 +113,7 @@ public class MejaActivity extends AppCompatActivity {
                             }
                         });
                         AlertDialog alert = builder.create();
-                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.black));
+                        alert.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.black));
                         alert.show();
                     } else {
                         orderLock();
@@ -146,9 +163,7 @@ public class MejaActivity extends AppCompatActivity {
                 builder.setTitle("PESAN KESALAHAN");
                 builder.setMessage("Terjadi kesalahan saat melakukan konfirmasi");
                 builder.setCancelable(false);
-                builder.setPositiveButton(
-
-                        "OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -202,21 +217,24 @@ public class MejaActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //if (query.isCloseConnection()) {
-         //   query = new Query();
-        //}
+        if (query.isCloseConnection()) {
+            query = new Query();
+        }
     }
 
     @Override
     public void onBackPressed() {
     }
 
-    @Override
-    public void onUserInteraction()
-    {
-        super.onUserInteraction();
-        app = new ControlApplication();
-        app.touch();
+    /*@Override
+    protected void onUserLeaveHint() {
 
     }
+
+    @Override
+    public void onAttachedToWindow()
+    {
+        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+        super.onAttachedToWindow();
+    }*/
 }

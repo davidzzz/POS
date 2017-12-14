@@ -18,6 +18,7 @@ import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
 import com.mobile.pos.sql.Query;
 import com.mobile.pos.util.ControlApplication;
+import com.mobile.pos.util.HomeKeyLocker;
 import com.mobile.pos.view.ExpandableHeightListView;
 import com.mobile.pos.view.OnSwipeTouchListener;
 
@@ -37,7 +38,6 @@ public class OrderActivity extends AppCompatActivity {
     String username, kode, kodeMeja, kategoriMeja, userCode, date;
     OrderAdapter orderAdapter;
     MenuAdapter adapter;
-    ControlApplication app;
     int pos = -1;
 
     @Override
@@ -45,6 +45,8 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         query = new Query();
+        HomeKeyLocker hkl = new HomeKeyLocker();
+        hkl.lock(this);
         kembali = (Button) findViewById(R.id.kembali);
         cancel = (Button) findViewById(R.id.cancel);
         order = (Button) findViewById(R.id.order);
@@ -190,27 +192,5 @@ public class OrderActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-    }
-
-    @Override
-    public void onUserInteraction()
-    {
-        super.onUserInteraction();
-        app = new ControlApplication();
-        app.touch();
-        //final Timer timer2 = new Timer();
-        //timer2.scheduleAtFixedRate(
-        //        new TimerTask() {
-        //            @Override
-         //           public void run() {
-         //               if (app.isStop()) {
-          //                  timer2.cancel();
-          //                  Intent i = new Intent(OrderActivity.this, LoginActivity.class);
-          //                  startActivity(i);
-          //                  finish();
-          //              }
-           //         }
-          //      }, 0, 5000
-       // );
     }
 }

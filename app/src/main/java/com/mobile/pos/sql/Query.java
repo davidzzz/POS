@@ -224,7 +224,7 @@ public class Query {
 
     private int findEmptyStatus(String kode) {
         try {
-            query = "Select count(*) as jumlah From OpenSpec Where Spec_Code = ? AND Status = ''";
+            query = "Select count(*) as jumlah From Sell_Master Where Spec_Code = ? AND Status = ''";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, kode);
             ResultSet rs = stmt.executeQuery();

@@ -1,11 +1,13 @@
 package com.mobile.pos;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -39,6 +41,10 @@ public class LoginAdminActivity extends AppCompatActivity {
         kembali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mEmailView.getWindowToken(), 0);
+                InputMethodManager imm2 = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm2.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
                 Intent i = new Intent(LoginAdminActivity.this, LoginActivity.class);
                 startActivity(i);
                 finish();
@@ -88,6 +94,10 @@ public class LoginAdminActivity extends AppCompatActivity {
             boolean user1 = email.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("61646D696E");
             boolean user2 = email.equalsIgnoreCase("endy") && pass.equalsIgnoreCase("54464F5341");
             if (user1 || user2) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mEmailView.getWindowToken(), 0);
+                InputMethodManager imm2 = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm2.hideSoftInputFromWindow(mPasswordView.getWindowToken(), 0);
                 Intent i = new Intent(this, SettingActivity.class);
                 startActivity(i);
                 finish();

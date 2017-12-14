@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.mobile.pos.sql.ConnectionConfig;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -182,15 +183,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     z = "Error in connection with SQL server";
                     return false;
                 } else {
-                    String pass = mPassword.trim();
+                    String pass = mPassword;
                     String temp = "";
                     for (int i = 0; i < pass.length(); i++) {
                         temp = temp + Integer.toString((int)pass.charAt(i), 16);
                     }
-                    pass = temp.trim();
-                    String query = "select * from User_Pass where Password2='" + pass + "'";
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(query);
+                    pass = temp;
+                    String query = "select * from User_Pass where Password2 = ?";
+                    PreparedStatement stmt = con.prepareStatement(query);
+                    stmt.setString(1, pass);
+                    ResultSet rs = stmt.executeQuery();
 
                     if (!rs.next()) {
                         z = "Password Salah";
@@ -199,8 +201,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     userCode = rs.getString("User_Code");
                     username = rs.getString("User_Name");
                     query = "select PublicDate from PublicDate";
-                    stmt = con.createStatement();
-                    rs = stmt.executeQuery(query);
+                    stmt = con.prepareStatement(query);
+                    rs = stmt.executeQuery();
                     rs.next();
                     date = rs.getString("PublicDate");
                 }
