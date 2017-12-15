@@ -104,7 +104,7 @@ public class MejaActivity extends AppCompatActivity {
                 spec = (Spec) nomor.getSelectedItem();
                 if (spec.isKtv()) {
                     if (spec.getStatus().equals("V")) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
                         builder.setTitle("PESAN KESALAHAN");
                         builder.setMessage("KTV wajib dibuka melalui POS");
                         builder.setCancelable(false);
@@ -115,7 +115,6 @@ public class MejaActivity extends AppCompatActivity {
                             }
                         });
                         AlertDialog alert = builder.create();
-                        alert.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.black));
                         alert.show();
                     } else {
                         orderLock();
@@ -161,7 +160,7 @@ public class MejaActivity extends AppCompatActivity {
                 query.closeConnection();
                 startActivity(i);
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
                 builder.setTitle("PESAN KESALAHAN");
                 builder.setMessage("Terjadi kesalahan saat melakukan konfirmasi");
                 builder.setCancelable(false);
@@ -175,7 +174,7 @@ public class MejaActivity extends AppCompatActivity {
                 alert.show();
             }
         } else if (status == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
             builder.setTitle("PESAN KESALAHAN");
             builder.setMessage("Unit sedang diorder oleh user lain");
             builder.setCancelable(false);
