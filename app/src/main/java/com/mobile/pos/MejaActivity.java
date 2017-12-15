@@ -4,7 +4,9 @@ import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,7 +54,7 @@ public class MejaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meja);
         query = new Query();
-        Lockscreen.getInstance(this).startLockscreenService();
+        //Lockscreen.getInstance(this).startLockscreenService();
         //HomeKeyLocker hkl = new HomeKeyLocker();
         //hkl.lock(this);
         /*HomeWatcher mHomeWatcher = new HomeWatcher(this);

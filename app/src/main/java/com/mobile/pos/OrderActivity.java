@@ -31,7 +31,7 @@ public class OrderActivity extends AppCompatActivity {
     Button kembali, cancel, order;
     TextView kategori, nomor;
     ListView listView;
-    ListView listMenu;
+    ExpandableHeightListView listMenu;
     ArrayList<Menu> list = new ArrayList<>();
     ArrayList<Order> listOrder = new ArrayList<>();
     Query query;
@@ -45,15 +45,15 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         query = new Query();
-        HomeKeyLocker hkl = new HomeKeyLocker();
-        hkl.lock(this);
+        //HomeKeyLocker hkl = new HomeKeyLocker();
+        //hkl.lock(this);
         kembali = (Button) findViewById(R.id.kembali);
         cancel = (Button) findViewById(R.id.cancel);
         order = (Button) findViewById(R.id.order);
         kategori = (TextView) findViewById(R.id.kategori);
         nomor = (TextView) findViewById(R.id.nomor);
         listView = (ListView) findViewById(R.id.listView);
-        listMenu = (ListView) findViewById(R.id.listMenu);
+        listMenu = (ExpandableHeightListView) findViewById(R.id.listMenu);
         kategoriMeja = getIntent().getStringExtra("kategoriMeja");
         kodeMeja = getIntent().getStringExtra("kodeMeja");
         kode = getIntent().getStringExtra("kode");
@@ -140,31 +140,23 @@ public class OrderActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                final Button delete = (Button) view.findViewById(R.id.delete);
-                for (int j = 0; j < listOrder.size(); j++) {
-                    View v = orderAdapter.getView(j, null, null);
-                    Button del = (Button) v.findViewById(R.id.delete);
-                    del.setVisibility(View.GONE);
-                }
-                pos = -1;
-                view.setOnTouchListener(new OnSwipeTouchListener(OrderActivity.this) {
-                    public void onSwipeLeft() {
-                        if (pos != -1) {
-                            for (int i = 0; i < listOrder.size(); i++) {
-                                View v = orderAdapter.getView(i, null, null);
-                                Button delete = (Button) v.findViewById(R.id.delete);
-                                delete.setVisibility(View.GONE);
-                            }
-                        }
-                        pos = i;
-                        delete.setVisibility(View.VISIBLE);
+                Button delete = (Button) view.findViewById(R.id.delete);
+                if (pos != -1) {
+                    View v = listView.getChildAt(pos);
+                    if (v != null) {
+                        Button del = (Button) v.findViewById(R.id.delete);
+                        del.setVisibility(View.GONE);
                     }
-                });
+                }
+                if (pos != i || delete.getVisibility() == View.GONE) {
+                    pos = i;
+                    delete.setVisibility(View.VISIBLE);
+                }
             }
         });
         adapter = new MenuAdapter(this, list, date, orderAdapter, query, order);
         listMenu.setAdapter(adapter);
-
+        listMenu.setExpanded(true);
         listMenu.setEnabled(false);
         daftarMenu();
     }
