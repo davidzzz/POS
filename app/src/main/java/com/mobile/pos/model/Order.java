@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class Order implements Parcelable {
     private String nama, kode, keterangan, uom, wh, printCode;
-    private float harga;
+    private float harga, tax, service;
     private int qty;
 
     public Order() {}
@@ -76,6 +76,22 @@ public class Order implements Parcelable {
 
     public String getPrintCode() {
         return printCode;
+    }
+
+    public void setTax(float tax) {
+        this.tax = tax;
+    }
+
+    public float getTax() {
+        return tax;
+    }
+
+    public void setService(float service) {
+        this.service = service;
+    }
+
+    public float getService() {
+        return service;
     }
 
     public int describeContents() {

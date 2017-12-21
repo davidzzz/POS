@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.mobile.pos.model.Kategori;
 import com.mobile.pos.model.Menu;
+import com.mobile.pos.model.Opsi;
 import com.mobile.pos.model.Order;
 import com.mobile.pos.model.Spec;
 
@@ -118,6 +119,58 @@ public class Query {
                 m.setPrintCode(rs.getString("PrintCode"));
                 m.setHarga(rs.getFloat("Stock_SellPrice1"));
                 list.add(m);
+            }
+        } catch (Exception e) {
+        }
+        return list;
+    }
+
+    public Opsi findOpsi() {
+        try {
+            query = "Select * from Opsi Where Dep_Code = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, "POS");
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Opsi o = new Opsi();
+                o.setTaxCal(rs.getString("TaxCal"));
+                o.setTax(rs.getFloat("TaxAmount"));
+                o.setService(rs.getFloat("ServiceAmount"));
+                return o;
+            }
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public ArrayList<Order> findTaxService(String taxCal, float tax, float service, String kode) {
+        ArrayList<Order> list = new ArrayList<>();
+        if (taxCal.equals("Tax dan Service")) {
+            service *= (1 + tax);
+        }
+        if (taxCal.equals("Service dan Tax")) {
+            tax *= (1 + service);
+        }
+        try {
+            query = "SELECT STOCK_CODE,STOCK_NAME,SELL_QTY,SELL_PRICE," +
+                    "(CASE WHEN ISNULL((SELECT TaxType FROM Allocation Where Stock_Code = Sell_Detail.Stock_Code),1) = 1 THEN SELL_QTY * SELL_PRICE * ?" +
+                    "ELSE 0 END) As SellTax,(CASE WHEN ISNULL((SELECT ServiceType FROM Allocation Where Stock_Code = Sell_Detail.Stock_Code),1) = 1 THEN SELL_QTY * SELL_PRICE * ?" +
+                    "ELSE 0 END) As SellService" +
+                    " FROM SELL_DETAIL WHERE STATUS = '' AND SPEC_CODE = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setFloat(1, tax);
+            stmt.setFloat(2, service);
+            stmt.setString(2, kode);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setNama(rs.getString("Stock_Name"));
+                o.setKode(rs.getString("Stock_Code"));
+                o.setQty(rs.getInt("Sell_Qty"));
+                o.setHarga(rs.getFloat("Sell_Price"));
+                o.setService(rs.getFloat("SellService"));
+                o.setTax(rs.getFloat("SellTax"));
+                list.add(o);
             }
         } catch (Exception e) {
         }

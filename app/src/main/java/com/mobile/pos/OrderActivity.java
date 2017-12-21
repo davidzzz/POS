@@ -151,6 +151,8 @@ public class OrderActivity extends AppCompatActivity {
                 if (pos != i || delete.getVisibility() == View.GONE) {
                     pos = i;
                     delete.setVisibility(View.VISIBLE);
+                } else {
+                    delete.setVisibility(View.GONE);
                 }
             }
         });
