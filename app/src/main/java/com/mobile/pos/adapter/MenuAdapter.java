@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mobile.pos.Constant;
+import com.mobile.pos.MejaActivity;
 import com.mobile.pos.R;
 import com.mobile.pos.model.Menu;
 import com.mobile.pos.model.Order;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MenuAdapter extends BaseAdapter {
     private Context context;
@@ -72,11 +75,9 @@ public class MenuAdapter extends BaseAdapter {
             path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".bmp";
             file = new File(path);
         }
-        if (file.exists()) {
-            Glide.with(context)
-                    .load(path)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
-        }
+        Glide.with(context)
+                .load(file.exists() ? path : R.drawable.no_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
         final TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
         teksQty.setText("1");
         ImageView btn = (ImageView) convertView.findViewById(R.id.btn);
@@ -124,32 +125,18 @@ public class MenuAdapter extends BaseAdapter {
                     } catch (Exception e) {
                     }
                     if (foodSales >= foodQty) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle("PESAN KESALAHAN");
-                        builder.setMessage("SOLD OUT");
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
+                        SweetAlertDialog alert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("PESAN KESALAHAN")
+                                .setContentText("SOLD OUT");
+                        alert.setCancelable(false);
                         alert.show();
                         cek = false;
                     } else {
                         if (Integer.parseInt(teksQty.getText().toString()) > foodQty - foodSales) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("PESAN KESALAHAN");
-                            builder.setMessage("SISA YANG BISA DIORDER " + (foodQty - foodSales));
-                            builder.setCancelable(false);
-                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                }
-                            });
-                            AlertDialog alert = builder.create();
+                            SweetAlertDialog alert = new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("PESAN KESALAHAN")
+                                    .setContentText("SISA YANG BISA DIORDER " + (foodQty - foodSales));
+                            alert.setCancelable(false);
                             alert.show();
                             cek = false;
                         }

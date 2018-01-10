@@ -52,10 +52,10 @@ public class KategoriAdapter extends BaseAdapter {
             path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
             file = new File(path);
         }
+        Glide.with(context)
+                .load(file.exists() ? path : R.drawable.no_image)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
         if (file.exists()) {
-            Glide.with(context)
-                    .load(path)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
             teks.setTextColor(context.getResources().getColor(android.R.color.white));
         } else {
             teks.setTextColor(context.getResources().getColor(android.R.color.black));

@@ -19,6 +19,8 @@ import com.mobile.pos.view.OnSwipeTouchListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class OrderAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
@@ -62,27 +64,31 @@ public class OrderAdapter extends BaseAdapter {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("HAPUS PESANAN");
-                builder.setMessage("Apakah pesanan ini akan dihapus?");
-                builder.setPositiveButton("YA", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        delete.setVisibility(View.GONE);
-                        list.remove(position);
-                        notifyDataSetChanged();
-                        if (list.size() == 0) {
-                            button.setEnabled(false);
-                        }
-                    }
-                });
-                builder.setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                AlertDialog alert = builder.create();
+                SweetAlertDialog alert = new SweetAlertDialog(context)
+                        .setTitleText("HAPUS PESANAN")
+                        .setContentText("Apakah pesanan ini akan dihapus?")
+                        .setCancelText("TIDAK")
+                        .setConfirmText("YA")
+                        .showCancelButton(true)
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                delete.setVisibility(View.GONE);
+                                list.remove(position);
+                                notifyDataSetChanged();
+                                if (list.size() == 0) {
+                                    button.setEnabled(false);
+                                }
+                                sDialog.cancel();
+                            }
+                        })
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.cancel();
+                            }
+                        });
+                alert.setCancelable(false);
                 alert.show();
             }
         });

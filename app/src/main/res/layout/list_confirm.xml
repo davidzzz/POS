@@ -11,18 +11,13 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/qty"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="3"
             android:id="@+id/nama"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="\@"/>
+            android:id="@+id/qty"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

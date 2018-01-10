@@ -87,12 +87,12 @@ public class LoginAdminActivity extends AppCompatActivity {
         } else {
             String pass = password.trim();
             String temp = "";
+            boolean user1 = email.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("AUTOSET2016");
+            boolean user2 = email.equalsIgnoreCase("endy") && pass.equalsIgnoreCase("TFOSA");
             for (int i = 0; i < pass.length(); i++) {
                 temp = temp + Integer.toString((int)pass.charAt(i), 16);
             }
             pass = temp.trim();
-            boolean user1 = email.equalsIgnoreCase("admin") && pass.equalsIgnoreCase("61646D696E");
-            boolean user2 = email.equalsIgnoreCase("endy") && pass.equalsIgnoreCase("54464F5341");
             if (user1 || user2) {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(mEmailView.getWindowToken(), 0);

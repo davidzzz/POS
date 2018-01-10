@@ -160,7 +160,7 @@ public class Query {
             stmt = conn.prepareStatement(query);
             stmt.setFloat(1, tax);
             stmt.setFloat(2, service);
-            stmt.setString(2, kode);
+            stmt.setString(3, kode);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Order o = new Order();

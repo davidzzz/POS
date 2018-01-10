@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     total += o.getQty() * o.getHarga();
                 }
                 final Dialog dialog = new Dialog(MainActivity.this);
-                dialog.setTitle("KONFIRMASI ORDERAN");
+                dialog.setTitle("BILLING SEMENTARA");
                 dialog.setContentView(R.layout.confirm_order);
                 ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
                 TextView teksTotal = (TextView) dialog.findViewById(R.id.total);
@@ -165,13 +165,14 @@ public class MainActivity extends AppCompatActivity {
                             query.insertLog(kodeMeja, "POS", userCode, username, "APPS TAMBAH MENU " + o.getKode() + "QTY " + o.getQty());
                         }
                         query.deleteOrderLock(kodeMeja);
+                        query.closeConnection();
+                        Toast.makeText(MainActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MainActivity.this, MejaActivity.class);
                         intent.putExtra("userCode", userCode);
                         intent.putExtra("username", username);
                         intent.putExtra("date", date);
                         startActivity(intent);
                         finish();
-                        Toast.makeText(MainActivity.this, "Order berhasil dilakukan", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialog.show();
@@ -184,17 +185,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 Button delete = (Button) view.findViewById(R.id.delete);
-                if (pos != -1) {
-                    View v = listView.getChildAt(pos);
-                    if (v != null) {
-                        Button del = (Button) v.findViewById(R.id.delete);
-                        del.setVisibility(View.GONE);
+                if (pos != i) {
+                    if (pos != -1) {
+                        View v = listView.getChildAt(pos);
+                        if (v != null) {
+                            Button del = (Button) v.findViewById(R.id.delete);
+                            del.setVisibility(View.GONE);
+                        }
                     }
-                }
-                if (pos != i || delete.getVisibility() == View.GONE) {
                     pos = i;
                     delete.setVisibility(View.VISIBLE);
-                } else {
+                } else if (delete.getVisibility() == View.VISIBLE) {
+                    pos = -1;
                     delete.setVisibility(View.GONE);
                 }
             }

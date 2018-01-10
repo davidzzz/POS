@@ -43,6 +43,8 @@ import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class MejaActivity extends AppCompatActivity {
     Query query;
     Button confirm, billing, logout;
@@ -86,12 +88,10 @@ public class MejaActivity extends AppCompatActivity {
         date = getIntent().getStringExtra("date");
         String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/Banner.jpg";
         File file = new File(path);
-        if (file.exists()) {
-            ImageView banner = (ImageView) findViewById(R.id.banner);
-            Glide.with(this)
-                    .load(path)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(banner);
-        }
+        ImageView banner = (ImageView) findViewById(R.id.banner);
+        Glide.with(this)
+                .load(file.exists() ? path : R.drawable.banner)
+                .diskCacheStrategy(DiskCacheStrategy.ALL).into(banner);
         newtimer = new CountDownTimer(1000000000, 1000) {
             public void onTick(long millisUntilFinished) {
                 Calendar c = Calendar.getInstance();
@@ -111,17 +111,10 @@ public class MejaActivity extends AppCompatActivity {
                 spec = (Spec) nomor.getSelectedItem();
                 if (spec.isKtv()) {
                     if (spec.getStatus().equals("V")) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
-                        builder.setTitle("PESAN KESALAHAN");
-                        builder.setMessage("KTV wajib dibuka melalui POS");
-                        builder.setCancelable(false);
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        AlertDialog alert = builder.create();
+                        SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("PESAN KESALAHAN")
+                                .setContentText("KTV wajib dibuka melalui POS");
+                        alert.setCancelable(false);
                         alert.show();
                     } else {
                         orderLock();
@@ -137,68 +130,75 @@ public class MejaActivity extends AppCompatActivity {
         billing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                spec = (Spec) nomor.getSelectedItem();
                 Opsi opsi = query.findOpsi();
-                float nilaiTax = opsi.getTax() / 100;
-                float nilaiService = opsi.getService() / 100;
-                final ArrayList<Order> listOrder = query.findTaxService(opsi.getTaxCal(), nilaiTax, nilaiService, spec.getKode());
-                DecimalFormat format = new DecimalFormat();
-                float total = 0;
-                if (listOrder.size() > 0) {
-                    for (int j = 0; j < listOrder.size(); j++) {
-                        Order o = listOrder.get(j);
-                        total += o.getQty() * o.getHarga();
+                if (opsi != null) {
+                    float nilaiTax = opsi.getTax() / 100;
+                    float nilaiService = opsi.getService() / 100;
+                    final ArrayList<Order> listOrder = query.findTaxService(opsi.getTaxCal(), nilaiTax, nilaiService, spec.getKode());
+                    DecimalFormat format = new DecimalFormat();
+                    float total = 0, totalTax = 0, totalService = 0;
+                    if (listOrder.size() > 0) {
+                        for (int j = 0; j < listOrder.size(); j++) {
+                            Order o = listOrder.get(j);
+                            total += o.getQty() * o.getHarga();
+                            totalTax += o.getTax();
+                            totalService += o.getService();
+                        }
+                        final Dialog dialog = new Dialog(MejaActivity.this);
+                        dialog.setTitle("KONFIRMASI BILLING");
+                        dialog.setContentView(R.layout.confirm_order);
+                        ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
+                        TextView teks1 = (TextView) dialog.findViewById(R.id.teksService);
+                        TextView teks2 = (TextView) dialog.findViewById(R.id.teksTax);
+                        TextView teks3 = (TextView) dialog.findViewById(R.id.teksGrand);
+                        teks1.setVisibility(View.VISIBLE);
+                        teks2.setVisibility(View.VISIBLE);
+                        teks3.setVisibility(View.VISIBLE);
+                        TextView teksTotal = (TextView) dialog.findViewById(R.id.total);
+                        TextView teksService = (TextView) dialog.findViewById(R.id.service);
+                        TextView teksTax = (TextView) dialog.findViewById(R.id.tax);
+                        TextView teksGrandTotal = (TextView) dialog.findViewById(R.id.grandtotal);
+                        TextView teksTotalItem = (TextView) dialog.findViewById(R.id.totalitem);
+                        teksService.setVisibility(View.VISIBLE);
+                        teksTax.setVisibility(View.VISIBLE);
+                        teksGrandTotal.setVisibility(View.VISIBLE);
+                        ConfirmAdapter confirmAdapter = new ConfirmAdapter(MejaActivity.this, listOrder);
+                        listConfirm.setAdapter(confirmAdapter);
+                        teksTotal.setText(format.format(total));
+                        teksService.setText(format.format(totalService));
+                        teksTax.setText(format.format(totalTax));
+                        teksGrandTotal.setText(format.format(total + totalService + totalTax));
+                        teksTotalItem.setText(listOrder.size() + "");
+                        Button cancel = (Button) dialog.findViewById(R.id.cancel);
+                        Button ok = (Button) dialog.findViewById(R.id.ok);
+                        cancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(MejaActivity.this, "Billing telah dibatalkan", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(MejaActivity.this, "Billing berhasil dilakukan", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.show();
+                    } else {
+                        SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("PESAN KESALAHAN")
+                                .setContentText("Billing tidak tersedia");
+                        alert.setCancelable(false);
+                        alert.show();
                     }
-                    float tax = listOrder.get(0).getTax();
-                    float service = listOrder.get(0).getService();
-                    final Dialog dialog = new Dialog(MejaActivity.this);
-                    dialog.setTitle("KONFIRMASI BILLING");
-                    dialog.setContentView(R.layout.confirm_order);
-                    ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
-                    TextView teks1 = (TextView) dialog.findViewById(R.id.teksService);
-                    TextView teks2 = (TextView) dialog.findViewById(R.id.teksTax);
-                    TextView teks3 = (TextView) dialog.findViewById(R.id.teksGrand);
-                    teks1.setVisibility(View.VISIBLE);
-                    teks2.setVisibility(View.VISIBLE);
-                    teks3.setVisibility(View.VISIBLE);
-                    TextView teksTotal = (TextView) dialog.findViewById(R.id.total);
-                    TextView teksService = (TextView) dialog.findViewById(R.id.service);
-                    TextView teksTax = (TextView) dialog.findViewById(R.id.tax);
-                    TextView teksGrandTotal = (TextView) dialog.findViewById(R.id.grandtotal);
-                    TextView teksTotalItem = (TextView) dialog.findViewById(R.id.totalitem);
-                    ConfirmAdapter confirmAdapter = new ConfirmAdapter(MejaActivity.this, listOrder);
-                    listConfirm.setAdapter(confirmAdapter);
-                    teksTotal.setText(format.format(total));
-                    teksService.setText(format.format(service));
-                    teksTax.setText(format.format(tax));
-                    teksGrandTotal.setText(format.format(total + service + tax));
-                    teksTotalItem.setText(listOrder.size() + "");
-                    Button cancel = (Button) dialog.findViewById(R.id.cancel);
-                    Button ok = (Button) dialog.findViewById(R.id.ok);
-                    cancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-                    ok.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Toast.makeText(MejaActivity.this, "Billing berhasil dilakukan", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    dialog.show();
                 } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
-                    builder.setTitle("PESAN KESALAHAN");
-                    builder.setMessage("Billing tidak tersedia");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    AlertDialog alert = builder.create();
+                    SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("PESAN KESALAHAN")
+                            .setContentText("Opsi tidak tersedia");
+                    alert.setCancelable(false);
                     alert.show();
                 }
             }
@@ -230,31 +230,17 @@ public class MejaActivity extends AppCompatActivity {
                 query.closeConnection();
                 startActivity(i);
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
-                builder.setTitle("PESAN KESALAHAN");
-                builder.setMessage("Terjadi kesalahan saat melakukan konfirmasi");
-                builder.setCancelable(false);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog alert = builder.create();
+                SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("PESAN KESALAHAN")
+                        .setContentText("Terjadi kesalahan saat melakukan konfirmasi");
+                alert.setCancelable(false);
                 alert.show();
             }
         } else if (status == 0) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(MejaActivity.this, R.style.AlertDialogCustom);
-            builder.setTitle("PESAN KESALAHAN");
-            builder.setMessage("Unit sedang diorder oleh user lain");
-            builder.setCancelable(false);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            AlertDialog alert = builder.create();
+            SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("PESAN KESALAHAN")
+                    .setContentText("Unit sedang diorder oleh user lain");
+            alert.setCancelable(false);
             alert.show();
         }
     }
