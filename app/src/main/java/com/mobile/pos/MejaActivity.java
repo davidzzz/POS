@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -87,10 +88,9 @@ public class MejaActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         date = getIntent().getStringExtra("date");
         String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/Banner.jpg";
-        File file = new File(path);
         ImageView banner = (ImageView) findViewById(R.id.banner);
         Glide.with(this)
-                .load(file.exists() ? path : R.drawable.banner)
+                .load(path)
                 .diskCacheStrategy(DiskCacheStrategy.ALL).into(banner);
         newtimer = new CountDownTimer(1000000000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -138,7 +138,7 @@ public class MejaActivity extends AppCompatActivity {
                     final ArrayList<Order> listOrder = query.findTaxService(opsi.getTaxCal(), nilaiTax, nilaiService, spec.getKode());
                     DecimalFormat format = new DecimalFormat();
                     float total = 0, totalTax = 0, totalService = 0;
-                    if (listOrder.size() > 0) {
+                    if (listOrder.size() > 0 && !spec.getStatus().equals("V") && !spec.getStatus().equals("X")) {
                         for (int j = 0; j < listOrder.size(); j++) {
                             Order o = listOrder.get(j);
                             total += o.getQty() * o.getHarga();
@@ -152,6 +152,8 @@ public class MejaActivity extends AppCompatActivity {
                         TextView teks1 = (TextView) dialog.findViewById(R.id.teksService);
                         TextView teks2 = (TextView) dialog.findViewById(R.id.teksTax);
                         TextView teks3 = (TextView) dialog.findViewById(R.id.teksGrand);
+                        TextView teks = (TextView) dialog.findViewById(R.id.teks);
+                        teks.setText("KONFIRMASI BILLING");
                         teks1.setVisibility(View.VISIBLE);
                         teks2.setVisibility(View.VISIBLE);
                         teks3.setVisibility(View.VISIBLE);
@@ -175,6 +177,9 @@ public class MejaActivity extends AppCompatActivity {
                         cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                //query.updateStatusSpec(spec.getKode(), "BATAL");
+                                //query.updateStatus(spec.getKode(), "HAPUS");
+                                //query.updateStatusDetail(spec.getKode(), "HAPUS");
                                 Toast.makeText(MejaActivity.this, "Billing telah dibatalkan", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
@@ -182,6 +187,18 @@ public class MejaActivity extends AppCompatActivity {
                         ok.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                /*Calendar c = Calendar.getInstance();
+                                String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
+                                String year = String.valueOf(c.get(Calendar.YEAR)).substring(2);
+                                int n = query.findStatus("POS-" + year + month + "-");
+                                String angka = "";
+                                if (n < 10) angka = angka + "0";
+                                if (n < 100) angka = angka + "0";
+                                if (n < 1000) angka = angka + "0";
+                                angka = angka + String.valueOf(n);
+                                query.updateStatusSpec(spec.getKode(), "POS-" + year + month + "-" + angka);
+                                query.updateStatus(spec.getKode(), "POS-" + year + month + "-" + angka);
+                                query.updateStatusDetail(spec.getKode(), "POS-" + year + month + "-" + angka);*/
                                 Toast.makeText(MejaActivity.this, "Billing berhasil dilakukan", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }

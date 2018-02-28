@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                     total += o.getQty() * o.getHarga();
                 }
                 final Dialog dialog = new Dialog(MainActivity.this);
-                dialog.setTitle("BILLING SEMENTARA");
+                dialog.setTitle("KONFIRMASI PESANAN");
                 dialog.setContentView(R.layout.confirm_order);
                 ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
                 TextView teksTotal = (TextView) dialog.findViewById(R.id.total);
@@ -214,6 +214,11 @@ public class MainActivity extends AppCompatActivity {
             listOrder.clear();
             for (int i = 0; i < listArray.size(); i++) {
                 listOrder.add(listArray.get(i));
+            }
+            if (listOrder.size() > 0) {
+                order.setEnabled(true);
+            } else {
+                order.setEnabled(false);
             }
             orderAdapter.notifyDataSetChanged();
         }

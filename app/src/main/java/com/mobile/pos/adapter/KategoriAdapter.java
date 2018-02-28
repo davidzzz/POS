@@ -1,6 +1,8 @@
 package com.mobile.pos.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,8 @@ import com.mobile.pos.R;
 import com.mobile.pos.model.Kategori;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class KategoriAdapter extends BaseAdapter {
@@ -47,20 +51,24 @@ public class KategoriAdapter extends BaseAdapter {
         teks.setText(k.getNama());
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
         String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".jpg";
-        File file = new File(path);
-        if (!file.exists()) {
-            path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
-            file = new File(path);
-        }
-        Glide.with(context)
-                .load(file.exists() ? path : R.drawable.no_image)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
-        if (file.exists()) {
+        try {
+            InputStream is = (InputStream) new URL(path).getContent();
+            Glide.with(context)
+                    .load(path)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
             teks.setTextColor(context.getResources().getColor(android.R.color.white));
-        } else {
-            teks.setTextColor(context.getResources().getColor(android.R.color.black));
+        } catch (Exception e) {
+            path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
+            try {
+                InputStream is = (InputStream) new URL(path).getContent();
+                Glide.with(context)
+                        .load(path)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+                teks.setTextColor(context.getResources().getColor(android.R.color.white));
+            } catch (Exception ex) {
+                teks.setTextColor(context.getResources().getColor(android.R.color.black));
+            }
         }
-
         return convertView;
     }
 }

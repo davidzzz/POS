@@ -63,6 +63,11 @@ public class OrderActivity extends AppCompatActivity {
         date = getIntent().getStringExtra("date");
         kategori.setText(kategoriMeja);
         nomor.setText(kodeMeja);
+        if (listOrder.size() > 0) {
+            order.setEnabled(true);
+        } else {
+            order.setEnabled(false);
+        }
         kembali.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +98,7 @@ public class OrderActivity extends AppCompatActivity {
                     total += o.getQty() * o.getHarga();
                 }
                 final Dialog dialog = new Dialog(OrderActivity.this);
-                dialog.setTitle("BILLING SEMENTARA");
+                dialog.setTitle("KONFIRMASI PESANAN");
                 dialog.setContentView(R.layout.confirm_order);
                 ListView listConfirm = (ListView) dialog.findViewById(R.id.listView);
                 TextView teksTotal = (TextView) dialog.findViewById(R.id.total);

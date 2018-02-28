@@ -275,13 +275,25 @@ public class Query {
         }
     }
 
+    public int findStatus(String kode) {
+        try {
+            query = "Select top 1 SUBSTRING(Status,10,4) as angka From OpenSpec Where SUBSTRING(Status,1,9) = ? order by Status desc";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next() ? rs.getInt("angka") + 1 : 1;
+        } catch (Exception e) {
+        }
+        return 0;
+    }
+
     private int findEmptyStatus(String kode) {
         try {
             query = "Select count(*) as jumlah From Sell_Master Where Spec_Code = ? AND Status = ''";
             stmt = conn.prepareStatement(query);
             stmt.setString(1, kode);
             ResultSet rs = stmt.executeQuery();
-            return rs.next() ? rs.getInt("jumlah") : 1;
+            return rs.next() ? rs.getInt("jumlah") : 0;
         } catch (Exception e) {
         }
         return 0;
@@ -332,12 +344,49 @@ public class Query {
         return String.valueOf(n);
     }
 
+    public void updateStatusSpec(String kode, String status){
+        try {
+            Calendar c = Calendar.getInstance();
+            String hour = (c.get(Calendar.HOUR_OF_DAY) < 10 ? "0" : "") + c.get(Calendar.HOUR_OF_DAY);
+            String minute = (c.get(Calendar.MINUTE) < 10 ? "0" : "") + c.get(Calendar.MINUTE);
+            query = "UPDATE OpenSpec SET Status = ?, Close_Time = ? WHERE Status = '' AND Spec_Code = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, status);
+            stmt.setString(2, hour + ":" + minute);
+            stmt.setString(3, kode);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+        }
+    }
+
+    public void updateStatus(String kode, String status){
+        try {
+            query = "UPDATE Sell_Master SET Status = ? WHERE Status = '' AND Spec_Code = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, status);
+            stmt.setString(2, kode);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+        }
+    }
+
+    public void updateStatusDetail(String kode, String status){
+        try {
+            query = "UPDATE Sell_Detail SET Status = ? WHERE Status = '' AND Spec_Code = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, status);
+            stmt.setString(2, kode);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+        }
+    }
+
     public void insertSellMaster(String kode, String kodeUser, String date){
         try {
             Calendar c = Calendar.getInstance();
             String month = ((c.get(Calendar.MONTH) + 1) < 10 ? "0" : "") + (c.get(Calendar.MONTH) + 1);
             String year = String.valueOf(c.get(Calendar.YEAR));
-            String teks = kode + "-" + getFormatString(findEmptyStatus(kode));
+            String teks = kode + "-" + getFormatString(findEmptyStatus(kode) + 1);
 
             query = "INSERT INTO Sell_Master(Spec_Code,SpecO_Code,Dep_Code,Guest_Name,Sell_Date,Status,User_Code,Period,Guest_No)" +
                     "VALUES (?,?,?,?,?,?,?,?,?)";

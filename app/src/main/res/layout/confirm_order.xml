@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
+        android:id="@+id/teks"
         android:text="KONFIRMASI PESANAN"/>
 
     <LinearLayout
@@ -25,22 +26,26 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="\@ QTY"/>
+            android:text="QTY"
+            android:gravity="end"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="HARGA"/>
+            android:text="HARGA"
+            android:gravity="end"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="SUBTOTAL"/>
+            android:text="SUBTOTAL"
+            android:gravity="end"/>
     </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_margin="5dp"
         android:id="@+id/listView" />
 
@@ -67,6 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="end"
             android:id="@+id/total"/>
     </LinearLayout>
     <LinearLayout
@@ -90,6 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:id="@+id/tax"
+            android:gravity="end"
             android:visibility="gone"/>
     </LinearLayout>
     <LinearLayout
@@ -113,6 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:id="@+id/service"
+            android:gravity="end"
             android:visibility="gone"/>
     </LinearLayout>
     <LinearLayout
@@ -138,6 +146,7 @@
             android:layout_weight="2"
             android:id="@+id/grandtotal"
             android:visibility="gone"
+            android:gravity="end"
             android:textStyle="bold"/>
     </LinearLayout>
     <LinearLayout
@@ -158,6 +167,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
+            android:gravity="end"
             android:id="@+id/totalitem"/>
     </LinearLayout>
 

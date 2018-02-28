@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +25,8 @@ import com.mobile.pos.model.Order;
 import com.mobile.pos.sql.Query;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -70,14 +74,21 @@ public class MenuAdapter extends BaseAdapter {
         teksHarga.setText(format.format(m.getHarga()));
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
         String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".jpg";
-        File file = new File(path);
-        if (!file.exists()) {
+        try {
+            InputStream is = (InputStream) new URL(path).getContent();
+            Glide.with(context)
+                    .load(path)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+        } catch (Exception e) {
             path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".bmp";
-            file = new File(path);
+            try {
+                InputStream is = (InputStream) new URL(path).getContent();
+                Glide.with(context)
+                        .load(path)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+            } catch (Exception ex) {
+            }
         }
-        Glide.with(context)
-                .load(file.exists() ? path : R.drawable.no_image)
-                .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
         final TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
         teksQty.setText("1");
         ImageView btn = (ImageView) convertView.findViewById(R.id.btn);
