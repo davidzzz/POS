@@ -5,13 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:id="@+id/teks"
-        android:text="KONFIRMASI PESANAN"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

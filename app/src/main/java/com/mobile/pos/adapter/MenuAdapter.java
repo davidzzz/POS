@@ -3,6 +3,7 @@ package com.mobile.pos.adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
 
 public class MenuAdapter extends BaseAdapter {
     private Context context;
@@ -73,7 +76,7 @@ public class MenuAdapter extends BaseAdapter {
         TextView teksHarga = (TextView) convertView.findViewById(R.id.harga);
         teksHarga.setText(format.format(m.getHarga()));
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
-        String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".jpg";
+        /*String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".jpg";
         try {
             InputStream is = (InputStream) new URL(path).getContent();
             Glide.with(context)
@@ -88,13 +91,34 @@ public class MenuAdapter extends BaseAdapter {
                         .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
             } catch (Exception ex) {
             }
+        }*/
+        String user = "";
+        String pass = "";
+
+        String url = "smb://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".jpg";
+        try{
+            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, pass);
+            SmbFile sfile = new SmbFile(url, auth);
+            Glide.with(context)
+                    .load("http://" + Constant.ip + sfile.getURL().getFile())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+        }catch(Exception e){
+            url = "smb://" + Constant.ip + "/FBClub/Help/Pictures/" + m.getKode() + ".bmp";
+            try {
+                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, pass);
+                SmbFile sfile = new SmbFile(url, auth);
+                Glide.with(context)
+                        .load("http://" + Constant.ip + sfile.getURL().getFile())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
+            } catch (Exception ex) {
+            }
         }
         final TextView teksQty = (TextView) convertView.findViewById(R.id.qty);
         teksQty.setText("1");
         ImageView btn = (ImageView) convertView.findViewById(R.id.btn);
-        Button order = (Button) convertView.findViewById(R.id.order);
-        Button min = (Button) convertView.findViewById(R.id.min);
-        Button pos = (Button) convertView.findViewById(R.id.pos);
+        final Button order = (Button) convertView.findViewById(R.id.order);
+        final Button min = (Button) convertView.findViewById(R.id.min);
+        final Button pos = (Button) convertView.findViewById(R.id.pos);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,6 +149,7 @@ public class MenuAdapter extends BaseAdapter {
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                order.setBackgroundColor(context.getResources().getColor(android.R.color.holo_green_light));
                 ResultSet rs = query.cekStok(date, m.getKode());
                 int foodSales = 0;
                 int foodQty = 0;
@@ -170,24 +195,47 @@ public class MenuAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                     button.setEnabled(true);
                 }
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        order.setBackgroundResource(R.drawable.button_order);
+                    }
+                }, 300);
             }
         });
         min.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                min.setBackgroundColor(context.getResources().getColor(android.R.color.holo_green_light));
                 int qty = Integer.parseInt(teksQty.getText().toString());
                 if (qty > 1) {
                     qty--;
                     teksQty.setText(String.valueOf(qty));
                 }
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        min.setBackgroundResource(R.drawable.button_min);
+                    }
+                }, 300);
             }
         });
         pos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pos.setBackgroundColor(context.getResources().getColor(android.R.color.holo_green_light));
                 int qty = Integer.parseInt(teksQty.getText().toString());
                 qty++;
                 teksQty.setText(String.valueOf(qty));
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pos.setBackgroundResource(R.drawable.button_plus);
+                    }
+                }, 300);
             }
         });
 
