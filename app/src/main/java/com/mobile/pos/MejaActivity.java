@@ -233,25 +233,37 @@ public class MejaActivity extends AppCompatActivity {
 
     public void orderLock() {
         int status = query.findOrderLock(spec.getKode());
+        boolean isOpenSpec = query.findOpenSpec(spec.getKode());
         if (status == 1) {
-            int a = query.insertOpenSpec(spec.getKode(), username, date);
-            int b = query.insertOrderLock(spec.getKode());
-            int c = query.insertLog(spec.getKode(), "DEP", userCode, username, "BUKA MEJA " + spec.getKode());
-            if (a > 0 && b > 0 && c > 0) {
-                Intent i = new Intent(MejaActivity.this, MainActivity.class);
-                i.putExtra("kategoriMeja", kategoriMeja);
-                i.putExtra("kodeMeja", spec.getKode());
-                i.putExtra("userCode", userCode);
-                i.putExtra("username", username);
-                i.putExtra("date", date);
-                query.closeConnection();
-                startActivity(i);
-            } else {
+            if (spec.isKtv() && !isOpenSpec) {
                 SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("PESAN KESALAHAN")
-                        .setContentText("Terjadi kesalahan saat melakukan konfirmasi");
+                        .setContentText("Konfirmasi unit ditolak");
                 alert.setCancelable(false);
                 alert.show();
+            } else {
+                int a = 1;
+                if (spec.isKtv() || !isOpenSpec) {
+                    a = query.insertOpenSpec(spec.getKode(), username, date);
+                }
+                int b = query.insertOrderLock(spec.getKode());
+                int c = query.insertLog(spec.getKode(), "DEP", userCode, username, "BUKA MEJA " + spec.getKode());
+                if (a > 0 && b > 0 && c > 0) {
+                    Intent i = new Intent(MejaActivity.this, MainActivity.class);
+                    i.putExtra("kategoriMeja", kategoriMeja);
+                    i.putExtra("kodeMeja", spec.getKode());
+                    i.putExtra("userCode", userCode);
+                    i.putExtra("username", username);
+                    i.putExtra("date", date);
+                    query.closeConnection();
+                    startActivity(i);
+                } else {
+                    SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("PESAN KESALAHAN")
+                            .setContentText("Terjadi kesalahan saat melakukan konfirmasi");
+                    alert.setCancelable(false);
+                    alert.show();
+                }
             }
         } else if (status == 0) {
             SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)

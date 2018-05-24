@@ -189,6 +189,19 @@ public class Query {
         return -1;
     }
 
+    public boolean findOpenSpec(String kode) {
+        try {
+            query = "Select * From OpenSpec Where Spec_Code = ? And Status = ?";
+            stmt = conn.prepareStatement(query);
+            stmt.setString(1, kode);
+            stmt.setString(2, "");
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
     public int updateSpec(String kode){
         try {
             query = "UPDATE Spec SET Status = ? WHERE Spec_Code = ?";
