@@ -2,6 +2,8 @@ package com.mobile.pos;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +35,8 @@ import java.sql.Statement;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private UserLoginTask mAuthTask = null;
     private EditText mPasswordView;
+    TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8, tv9, tv0, delete;
+    final Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,27 +68,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        TextView tv1 = (TextView) findViewById(R.id.satu);
+        tv1 = (TextView) findViewById(R.id.satu);
         tv1.setOnClickListener(this);
-        TextView tv2 = (TextView) findViewById(R.id.dua);
+        tv2 = (TextView) findViewById(R.id.dua);
         tv2.setOnClickListener(this);
-        TextView tv3 = (TextView) findViewById(R.id.tiga);
+        tv3 = (TextView) findViewById(R.id.tiga);
         tv3.setOnClickListener(this);
-        TextView tv4 = (TextView) findViewById(R.id.empat);
+        tv4 = (TextView) findViewById(R.id.empat);
         tv4.setOnClickListener(this);
-        TextView tv5 = (TextView) findViewById(R.id.lima);
+        tv5 = (TextView) findViewById(R.id.lima);
         tv5.setOnClickListener(this);
-        TextView tv6 = (TextView) findViewById(R.id.enam);
+        tv6 = (TextView) findViewById(R.id.enam);
         tv6.setOnClickListener(this);
-        TextView tv7 = (TextView) findViewById(R.id.tujuh);
+        tv7 = (TextView) findViewById(R.id.tujuh);
         tv7.setOnClickListener(this);
-        TextView tv8 = (TextView) findViewById(R.id.delapan);
+        tv8 = (TextView) findViewById(R.id.delapan);
         tv8.setOnClickListener(this);
-        TextView tv9 = (TextView) findViewById(R.id.sembilan);
+        tv9 = (TextView) findViewById(R.id.sembilan);
         tv9.setOnClickListener(this);
-        TextView tv0 = (TextView) findViewById(R.id.nol);
+        tv0 = (TextView) findViewById(R.id.nol);
         tv0.setOnClickListener(this);
-        TextView delete = (TextView) findViewById(R.id.delete);
+        delete = (TextView) findViewById(R.id.delete);
         delete.setOnClickListener(this);
     }
 
@@ -92,39 +96,116 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.satu:
                 mPasswordView.setText(mPasswordView.getText() + "1");
+                tv1.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv1.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.dua:
                 mPasswordView.setText(mPasswordView.getText() + "2");
+                tv2.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv2.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.tiga:
                 mPasswordView.setText(mPasswordView.getText() + "3");
+                tv3.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv3.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.empat:
                 mPasswordView.setText(mPasswordView.getText() + "4");
+                tv4.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv4.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.lima:
                 mPasswordView.setText(mPasswordView.getText() + "5");
+                tv5.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv5.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.enam:
                 mPasswordView.setText(mPasswordView.getText() + "6");
+                tv6.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv6.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.tujuh:
                 mPasswordView.setText(mPasswordView.getText() + "7");
+                tv7.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv7.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.delapan:
                 mPasswordView.setText(mPasswordView.getText() + "8");
+                tv8.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv8.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.sembilan:
                 mPasswordView.setText(mPasswordView.getText() + "9");
+                tv9.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv9.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.nol:
                 mPasswordView.setText(mPasswordView.getText() + "0");
+                tv0.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tv0.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             case R.id.delete:
                 String pass = mPasswordView.getText().toString();
                 if (pass.length() > 0) {
                     mPasswordView.setText(pass.substring(0, pass.length() - 1));
                 }
+                delete.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        delete.setBackgroundResource(R.drawable.gray);
+                    }
+                }, 300);
                 break;
             default:
                 break;

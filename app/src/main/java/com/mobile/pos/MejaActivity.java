@@ -152,8 +152,6 @@ public class MejaActivity extends AppCompatActivity {
                         TextView teks1 = (TextView) dialog.findViewById(R.id.teksService);
                         TextView teks2 = (TextView) dialog.findViewById(R.id.teksTax);
                         TextView teks3 = (TextView) dialog.findViewById(R.id.teksGrand);
-                        TextView teks = (TextView) dialog.findViewById(R.id.teks);
-                        teks.setText("KONFIRMASI BILLING");
                         teks1.setVisibility(View.VISIBLE);
                         teks2.setVisibility(View.VISIBLE);
                         teks3.setVisibility(View.VISIBLE);
@@ -174,7 +172,8 @@ public class MejaActivity extends AppCompatActivity {
                         teksTotalItem.setText(listOrder.size() + "");
                         Button cancel = (Button) dialog.findViewById(R.id.cancel);
                         Button ok = (Button) dialog.findViewById(R.id.ok);
-                        cancel.setOnClickListener(new View.OnClickListener() {
+                        cancel.setVisibility(View.GONE);
+                        /*cancel.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 //query.updateStatusSpec(spec.getKode(), "BATAL");
@@ -183,7 +182,7 @@ public class MejaActivity extends AppCompatActivity {
                                 Toast.makeText(MejaActivity.this, "Billing telah dibatalkan", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
-                        });
+                        });*/
                         ok.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -199,7 +198,7 @@ public class MejaActivity extends AppCompatActivity {
                                 query.updateStatusSpec(spec.getKode(), "POS-" + year + month + "-" + angka);
                                 query.updateStatus(spec.getKode(), "POS-" + year + month + "-" + angka);
                                 query.updateStatusDetail(spec.getKode(), "POS-" + year + month + "-" + angka);*/
-                                Toast.makeText(MejaActivity.this, "Billing berhasil dilakukan", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(MejaActivity.this, "Billing berhasil dilakukan", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
                         });

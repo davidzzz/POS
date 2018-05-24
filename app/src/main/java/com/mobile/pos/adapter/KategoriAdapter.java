@@ -21,6 +21,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
+
 public class KategoriAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
@@ -50,19 +53,23 @@ public class KategoriAdapter extends BaseAdapter {
         TextView teks = (TextView) convertView.findViewById(R.id.kategori);
         teks.setText(k.getNama());
         ImageView image = (ImageView) convertView.findViewById(R.id.image);
-        String path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".jpg";
+        String user = "";
+        String pass = "";
+        String url = "smb://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".jpg";
         try {
-            InputStream is = (InputStream) new URL(path).getContent();
+            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, pass);
+            SmbFile sfile = new SmbFile(url, auth);
             Glide.with(context)
-                    .load(path)
+                    .load("http://" + Constant.ip + sfile.getURL().getFile())
                     .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
             teks.setTextColor(context.getResources().getColor(android.R.color.white));
         } catch (Exception e) {
-            path = "http://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
+            url = "smb://" + Constant.ip + "/FBClub/Help/Pictures/" + k.getKode() + ".bmp";
             try {
-                InputStream is = (InputStream) new URL(path).getContent();
+                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, pass);
+                SmbFile sfile = new SmbFile(url, auth);
                 Glide.with(context)
-                        .load(path)
+                        .load("http://" + Constant.ip + sfile.getURL().getFile())
                         .diskCacheStrategy(DiskCacheStrategy.ALL).into(image);
                 teks.setTextColor(context.getResources().getColor(android.R.color.white));
             } catch (Exception ex) {
