@@ -109,21 +109,23 @@ public class MejaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 spec = (Spec) nomor.getSelectedItem();
-                if (spec.isKtv()) {
-                    if (spec.getStatus().equals("V")) {
-                        SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText("PESAN KESALAHAN")
-                                .setContentText("KTV wajib dibuka melalui POS");
-                        alert.setCancelable(false);
-                        alert.show();
+                if (spec != null) {
+                    if (spec.isKtv()) {
+                        if (spec.getStatus().equals("V")) {
+                            SweetAlertDialog alert = new SweetAlertDialog(MejaActivity.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("PESAN KESALAHAN")
+                                    .setContentText("KTV wajib dibuka melalui POS");
+                            alert.setCancelable(false);
+                            alert.show();
+                        } else {
+                            orderLock();
+                        }
                     } else {
+                        if (spec.getStatus().equals("V")) {
+                            query.updateSpec(spec.getKode());
+                        }
                         orderLock();
                     }
-                } else {
-                    if (spec.getStatus().equals("V")) {
-                        query.updateSpec(spec.getKode());
-                    }
-                    orderLock();
                 }
             }
         });
